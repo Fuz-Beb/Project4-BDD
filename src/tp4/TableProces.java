@@ -1,22 +1,26 @@
 package tp4;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.TypedQuery;
 
 /**
  * Permet d'effectuer les accès à la table proces.
  */
 public class TableProces
 {
-    private PreparedStatement stmtExisteProces;
-    private PreparedStatement stmtInsertProces;
-    private PreparedStatement stmtSelectProcesNonTermine;
-    private PreparedStatement stmtTerminerProces;
-    private PreparedStatement stmtVerificationProcesDecision;
-    private PreparedStatement stmtProcesJugeEnCours;
-    private PreparedStatement stmtVerificationProcesDevantJury;
-    private PreparedStatement stmtSelectJugeDansProces;
+    private TypedQuery<Proces> stmtExiste;
+    private TypedQuery<Proces> stmtSelectProcesNonTermine;
+    private TypedQuery<Proces> stmtVerificationProcesDecision;
+    private TypedQuery<Proces> stmtProcesJugeEnCours;
+    private TypedQuery<Proces> stmtVerificationProcesDevantJury;
+    private TypedQuery<Proces> stmtSelectJugeDansProces;
+    private TypedQuery<Integer> stmtTerminerProces;
     private Connexion cx;
 
     /**
@@ -24,27 +28,36 @@ public class TableProces
      * d'énoncés SQL.
      * 
      * @param cx
-     * @throws SQLException
      */
-    public TableProces(Connexion cx) throws SQLException
+    public TableProces(Connexion cx)
     {
+        // Formater la date
+        SimpleDateFormat formatAMJ = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formatAMJ.setLenient(false);
+        Date currentDate = null;
+        
+        try
+        {
+            currentDate = formatAMJ.parse(LocalDateTime.now().toString());
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
         this.cx = cx;
-        stmtExisteProces = cx.getConnection().prepareStatement("select * from \"Proces\" where \"id\" = ?");
+        stmtExiste = cx.getConnection().createQuery("select p from Proces where p.id = :id", Proces.class);
         stmtSelectProcesNonTermine = cx.getConnection()
-                .prepareStatement("select * from \"Proces\" where \"id\" = ? and \"date\" < current_date");
-        stmtTerminerProces = cx.getConnection()
-                .prepareStatement("update \"Proces\" set \"decision\" = ? where \"id\" = ?");
+                .createQuery("select p from Proces where p.id = :id and p.date < " + currentDate, Proces.class);
         stmtVerificationProcesDecision = cx.getConnection()
-                .prepareStatement("select * from \"Proces\" where \"id\" = ? and \"decision\" is null");
-        stmtInsertProces = cx.getConnection().prepareStatement(
-                "insert into \"Proces\" (\"id\", \"Juge_id\", \"date\", \"devantJury\", \"PartieDefenderesse_id\", \"PartiePoursuivant_id\") "
-                        + "values (?,?,?,?,?,?)");
+                .createQuery("select p from Proces where p.id = :id and p.decision = null", Proces.class);
         stmtProcesJugeEnCours = cx.getConnection()
-                .prepareStatement("select * from \"Proces\" where \"Juge_id\" = ? and \"decision\" is null");
+                .createQuery("select p from Proces where p.Juge_id = :id and p.decision = null", Proces.class);
         stmtVerificationProcesDevantJury = cx.getConnection()
-                .prepareStatement("select from \"Proces\" where \"id\" = ? and \"devantJury\" = 1");
-        stmtSelectJugeDansProces = cx.getConnection()
-                .prepareStatement("select \"Juge_id\" from \"Proces\" where \"id\" = ?");
+                .createQuery("select p from Proces where p.id = :id and p.devantJury = 1", Proces.class);
+//        stmtSelectJugeDansProces = cx.getConnection()
+//                .createQuery("select p.Juge_id from \"Proces\" where \"id\" = ?", Proces.class);
+        stmtTerminerProces = cx.getConnection().createQuery("update Proces set \"decision\" = ? where \"id\" = ?", Proces.class)
     }
 
     /**
@@ -62,40 +75,35 @@ public class TableProces
      * 
      * @param proces
      * @return Juge
-     * @throws SQLException
      * @throws IFT287Exception
      */
-    public Proces getProces(Proces proces) throws SQLException, IFT287Exception
-    {
-        stmtExisteProces.setInt(1, proces.getId());
-        ResultSet rset = stmtExisteProces.executeQuery();
-
-        if (rset.next())
-            proces = new Proces(proces.getId(), rset.getInt(2), rset.getDate(3), rset.getInt(4),
-                    rset.getInt(5), rset.getInt(6));
-
-        // Si la decision a été prise
-        if (rset.getObject(7) != null)
-            proces.setDecision(rset.getInt(7));
-
-        rset.close();
-        return proces;
-    }
+//    public Proces getProces(Proces proces) throws IFT287Exception
+//    {
+//        stmtExiste.setParameter("id", proces.getId());
+//        List<Proces> procesList = stmtExiste.getResultList();
+//        if(!procesList.isEmpty())
+//            return procesList.get(0);
+//        else
+//            return null;
+//
+//        // Si la decision a été prise
+//        if (proces.getDecision() != null)
+//            proces.setDecision(rset.getInt(7));
+//
+//        rset.close();
+//        return proces;
+//    }
 
     /**
      * Verification de l'existance d'un proces
      * 
      * @param proces
      * @return boolean
-     * @throws SQLException
      */
-    public boolean existe(Proces proces) throws SQLException
+    public boolean existe(Proces proces)
     {
-        stmtExisteProces.setInt(1, proces.getId());
-        ResultSet rset = stmtExisteProces.executeQuery();
-        boolean procesExiste = rset.next();
-        rset.close();
-        return procesExiste;
+        stmtExiste.setParameter("id", proces.getId());
+        return !stmtExiste.getResultList().isEmpty();
     }
 
     /**
@@ -103,39 +111,34 @@ public class TableProces
      * 
      * @param proces
      * @return String
-     * @throws SQLException
      * @throws IFT287Exception
      */
-    public Proces affichage(Proces proces) throws SQLException, IFT287Exception
-    {
-        Proces tupleProcesReturn = null;
-
-        stmtExisteProces.setInt(1, proces.getId());
-        ResultSet rset = stmtExisteProces.executeQuery();
-
-        if (rset.next())
-        {
-            tupleProcesReturn = getProces(new Proces(rset.getInt(1)));
-        }
-
-        rset.close();
-        return tupleProcesReturn;
-    }
+//    public Proces affichage(Proces proces) throws IFT287Exception
+//    {
+//        Proces tupleProcesReturn = null;
+//
+//        stmtExiste.setInt(1, proces.getId());
+//        ResultSet rset = stmtExiste.executeQuery();
+//
+//        if (rset.next())
+//        {
+//            tupleProcesReturn = getProces(new Proces(rset.getInt(1)));
+//        }
+//
+//        rset.close();
+//        return tupleProcesReturn;
+//    }
 
     /**
      * Vérification que le proces a atteint sa date initiale
      * 
      * @param proces
      * @return boolean
-     * @throws SQLException
      */
-    public boolean compareDate(Proces proces) throws SQLException
+    public boolean compareDate(Proces proces)
     {
-        stmtSelectProcesNonTermine.setInt(1, proces.getId());
-        ResultSet rset = stmtSelectProcesNonTermine.executeQuery();
-        boolean compareDate = rset.next();
-        rset.close();
-        return compareDate;
+        stmtSelectProcesNonTermine.setParameter("id", proces.getId());
+        return !stmtSelectProcesNonTermine.getResultList().isEmpty();
     }
 
     /**
@@ -143,10 +146,10 @@ public class TableProces
      * 
      * @param decisionProces
      * @param proces
-     * @throws SQLException
      */
-    public void terminer(int decisionProces, Proces proces) throws SQLException
+    public int terminer(int decisionProces, Proces proces)
     {
+        stmtTerminerProces.setParameter(arg0, arg1);
         stmtTerminerProces.setInt(1, decisionProces);
         stmtTerminerProces.setInt(2, proces.getId());
         stmtTerminerProces.executeUpdate();
@@ -157,9 +160,8 @@ public class TableProces
      * 
      * @param proces
      * @return int
-     * @throws SQLException
      */
-    public int changeJugeStatut(Proces proces) throws SQLException
+    public int changeJugeStatut(Proces proces)
     {
         int idJuge = 0;
 
@@ -181,30 +183,19 @@ public class TableProces
      * 
      * @param juge
      * @return boolean
-     * @throws SQLException
      */
-    public boolean jugeEnCours(Juge juge) throws SQLException
+    public boolean jugeEnCours(Juge juge)
     {
-        stmtProcesJugeEnCours.setInt(1, juge.getId());
-        ResultSet rset = stmtProcesJugeEnCours.executeQuery();
-
-        if (rset.next())
-        {
-            return true;
-        }
-
-        rset.close();
-
-        return false;
+        stmtProcesJugeEnCours.setParameter("id", juge.getId());
+        return !stmtProcesJugeEnCours.getResultList().isEmpty();
     }
 
     /**
      * Ajout du proces
      * 
      * @param proces
-     * @throws SQLException
      */
-    public void creer(Proces proces) throws SQLException
+    public void creer(Proces proces)
     {
         stmtInsertProces.setInt(1, proces.getId());
         stmtInsertProces.setInt(2, proces.getJuge_id());
@@ -220,15 +211,11 @@ public class TableProces
      * 
      * @param proces
      * @return boolean
-     * @throws SQLException
      */
-    public boolean verifierProcesTermine(Proces proces) throws SQLException
+    public boolean verifierProcesTermine(Proces proces)
     {
-        stmtVerificationProcesDecision.setInt(1, proces.getId());
-        ResultSet rset = stmtVerificationProcesDecision.executeQuery();
-        boolean procesTermine = rset.next();
-        rset.close();
-        return procesTermine;
+        stmtVerificationProcesDecision.setParameter("id", proces.getId());
+        return !stmtVerificationProcesDecision.getResultList().isEmpty();
     }
 
     /**
@@ -236,14 +223,10 @@ public class TableProces
      * 
      * @param proces
      * @return boolean
-     * @throws SQLException
      */
-    public boolean devantJury(Proces proces) throws SQLException
+    public boolean devantJury(Proces proces)
     {
-        stmtVerificationProcesDevantJury.setInt(1, proces.getId());
-        ResultSet rset = stmtVerificationProcesDevantJury.executeQuery();
-        boolean devantJury = rset.next();
-        rset.close();
-        return devantJury;
+        stmtVerificationProcesDevantJury.setParameter("id", proces.getId());
+        return !stmtVerificationProcesDevantJury.getResultList().isEmpty();
     }
 }

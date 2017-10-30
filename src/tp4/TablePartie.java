@@ -1,16 +1,13 @@
 package tp4;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.TypedQuery;
 
 /**
  * Permet d'effectuer les accès à la table partie.
  */
 public class TablePartie
 {
-    private PreparedStatement stmtExistePartie;
-    private PreparedStatement stmtInsertPartie;
+    private TypedQuery<Partie> stmtExiste;
     private Connexion cx;
 
     /**
@@ -18,14 +15,11 @@ public class TablePartie
      * d'énoncés SQL.
      * 
      * @param cx
-     * @throws SQLException
      */
-    public TablePartie(Connexion cx) throws SQLException
+    public TablePartie(Connexion cx)
     {
         this.cx = cx;
-        stmtExistePartie = cx.getConnection().createQuery("select * from \"Partie\" where \"id\" = ?");
-        stmtInsertPartie = cx.getConnection().prepareStatement(
-                "insert into \"Partie\" (\"id\", \"prenom\", \"nom\", \"Avocat_id\") values (?,?,?,?)");
+        stmtExiste = cx.getConnection().createQuery("select p from Partie where id = p.id = :id", Partie.class);
     }
 
     /**
@@ -43,30 +37,22 @@ public class TablePartie
      * 
      * @param partie
      * @return boolean
-     * @throws SQLException
      */
-    public boolean existe(Partie partie) throws SQLException
+    public boolean existe(Partie partie)
     {
-        stmtExistePartie.setInt(1, partie.getId());
-        ResultSet rset = stmtExistePartie.executeQuery();
-        boolean partieExiste = rset.next();
-        rset.close();
-        return partieExiste;
+        stmtExiste.setParameter("id", partie.getId());
+        return !stmtExiste.getResultList().isEmpty();
     }
 
     /**
      * Ajout d'un nouveau partie
      * 
      * @param partie
-     * @throws SQLException
+     * @return Partie
      */
-    public void ajout(Partie partie) throws SQLException
+    public Partie ajout(Partie partie)
     {
-        /* Ajout du partie. */
-        stmtInsertPartie.setInt(1, partie.getId());
-        stmtInsertPartie.setString(2, partie.getPrenom());
-        stmtInsertPartie.setString(3, partie.getNom());
-        stmtInsertPartie.setInt(4, partie.getAvocat_id());
-        stmtInsertPartie.executeUpdate();
+        cx.getConnection().persist(partie);
+        return partie;
     }
 }

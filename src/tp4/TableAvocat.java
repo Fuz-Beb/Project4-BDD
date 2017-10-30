@@ -22,7 +22,7 @@ public class TableAvocat
     public TableAvocat(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select m from Membre m where m.m_idMembre = :idMembre", Avocat.class);
+        stmtExiste = cx.getConnection().createQuery("select a from Avocat where a.id = :id", Avocat.class);
     }
 
     /**
@@ -40,11 +40,10 @@ public class TableAvocat
      * 
      * @param avocat 
      * @return boolean
-     * @throws SQLException
      */
-    public boolean existe(Avocat avocat) throws SQLException
+    public boolean existe(Avocat avocat)
     {
-        stmtExiste.setParameter(1, avocat.getId());
+        stmtExiste.setParameter("id", avocat.getId());
         return !stmtExiste.getResultList().isEmpty();
     }
 
@@ -53,9 +52,8 @@ public class TableAvocat
      * 
      * @param avocat
      * @return Avocat
-     * @throws SQLException
      */
-    public Avocat ajouter(Avocat avocat) throws SQLException
+    public Avocat ajouter(Avocat avocat)
     {
         cx.getConnection().persist(avocat);
         return avocat;
