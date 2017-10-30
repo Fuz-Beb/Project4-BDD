@@ -106,7 +106,7 @@ public class Partie
     /**
      * @return avocat
      */
-    public Avocat getAvocat_id()
+    public Avocat getAvocat()
     {
         return avocat;
     }
@@ -115,7 +115,7 @@ public class Partie
      * @param avocat
      *            the avocat_id to set
      */
-    public void setAvocat_id(Avocat avocat)
+    public void setAvocat(Avocat avocat)
     {
         this.avocat = avocat;
     }

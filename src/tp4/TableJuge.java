@@ -5,16 +5,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
 /**
  * Permet d'effectuer les accès à la table juge.
  */
 public class TableJuge
 {
-    private static PreparedStatement stmtExiste;
-    private static PreparedStatement stmtInsert;
-    private static PreparedStatement stmtSelect;
-    private static PreparedStatement stmtRetirer;
-    private static PreparedStatement stmtChangeDisponibilite;
+    private TypedQuery<Juge> stmtExiste;
     private Connexion cx;
 
     /**
@@ -27,8 +26,8 @@ public class TableJuge
     public TableJuge(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        stmtSelect = cx.getConnection().prepareStatement("select * from \"Juge\" where \"disponible\" = true");
-        stmtExiste = cx.getConnection().prepareStatement("select * from \"Juge\" where \"id\" = ?");
+//        stmtSelect = cx.getConnection().prepareStatement("select * from \"Juge\" where \"disponible\" = true");
+        stmtExiste = cx.getConnection().createQuery("select j from \"Juge\" where \"id\" = j");
         stmtInsert = cx.getConnection()
                 .prepareStatement("insert into \"Juge\" (\"id\", \"prenom\", \"nom\", \"age\") values (?,?,?,?)");
         stmtRetirer = cx.getConnection().prepareStatement(

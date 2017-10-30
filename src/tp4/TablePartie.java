@@ -23,7 +23,7 @@ public class TablePartie
     public TablePartie(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        stmtExistePartie = cx.getConnection().prepareStatement("select * from \"Partie\" where \"id\" = ?");
+        stmtExistePartie = cx.getConnection().createQuery("select * from \"Partie\" where \"id\" = ?");
         stmtInsertPartie = cx.getConnection().prepareStatement(
                 "insert into \"Partie\" (\"id\", \"prenom\", \"nom\", \"Avocat_id\") values (?,?,?,?)");
     }
