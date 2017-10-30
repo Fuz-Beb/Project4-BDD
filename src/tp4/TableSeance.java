@@ -1,9 +1,8 @@
 package tp4;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.persistence.TypedQuery;
 
 /**
  * Permet d'effectuer les accès à la table seance.
@@ -11,35 +10,28 @@ import java.util.ArrayList;
  */
 public class TableSeance
 {
-    private PreparedStatement stmtExisteSeance;
-    private PreparedStatement stmtInsertSeance;
-    private PreparedStatement stmtExisteProcesDansSeance;
-    private PreparedStatement stmtSupprimerSeancesProcesTermine;
-    private PreparedStatement stmtSeanceNonTerminee;
-    private PreparedStatement stmtSupprimerSeance;
     private Connexion cx;
+    private TypedQuery<Seance> stmtExiste;
+    private TypedQuery<Seance> stmtExisteProcesDansSeance;
+    private TypedQuery<Seance> stmtSupprimerSeancesProcesTermine;
+    private TypedQuery<Seance> stmtSeanceNonTerminee;
 
     /**
      * Constructeur de confort. Creation d'une instance. Précompilation
      * d'énoncés SQL.
      * 
      * @param cx
-     * @throws SQLException
      */
-    public TableSeance(Connexion cx) throws SQLException
+    public TableSeance(Connexion cx)
     {
         this.cx = cx;
-        stmtExisteSeance = cx.getConnection().prepareStatement("select * from \"Seance\" where id = ?");
+        stmtExiste = cx.getConnection().createQuery("select s from Seance s where s.id = :idSeance", Seance.class);
         stmtExisteProcesDansSeance = cx.getConnection()
-                .prepareStatement("select * from \"Seance\" where \"Proces_id\" = ?");
-        stmtSupprimerSeancesProcesTermine = cx.getConnection()
-                .prepareStatement("select * from \"Seance\" where \"Proces_id\" = ? and date > current_date");
+                .createQuery("select s from Seance s, s.proces p where p.id = :idProces", Seance.class);
+        stmtSupprimerSeancesProcesTermine = cx.getConnection().createQuery(
+                "select s from Seance s, s.proces p where p.id = :idProces and s.date > :date", Seance.class);
         stmtSeanceNonTerminee = cx.getConnection()
-                .prepareStatement("select * from \"Seance\" where \"id\" = ? and \"date\" < current_date");
-        stmtSupprimerSeance = cx.getConnection().prepareStatement("delete from \"Seance\" where \"id\" = ?");
-        stmtInsertSeance = cx.getConnection()
-                .prepareStatement("insert into \"Seance\" (\"id\", \"Proces_id\", \"date\") values (?,?,?)");
-
+                .createQuery("select s from Seance s where s.id = :idSeance and s.date < :date", Seance.class);
     }
 
     /**
@@ -49,26 +41,19 @@ public class TableSeance
      * @return String
      * @throws SQLException
      */
-    public ArrayList<Seance> affichage(Proces proces) throws SQLException
-    {
-        ArrayList<Seance> listSeance = new ArrayList<Seance>();
-
-        stmtExisteProcesDansSeance.setInt(1, proces.getId());
-        ResultSet rset = stmtExisteProcesDansSeance.executeQuery();
-
-        if (rset.next())
-        {
-            do
-            {
-                // Ajout de chacun des juges dans la liste
-                listSeance.add(getSeance(new Seance(rset.getInt(1))));
-            }
-            while (rset.next());
-        }
-
-        rset.close();
-        return listSeance;
-    }
+    /*
+     * public ArrayList<Seance> affichage(Proces proces) throws SQLException {
+     * ArrayList<Seance> listSeance = new ArrayList<Seance>();
+     * 
+     * stmtExisteProcesDansSeance.setInt(1, proces.getId()); ResultSet rset =
+     * stmtExisteProcesDansSeance.executeQuery();
+     * 
+     * if (rset.next()) { do { // Ajout de chacun des juges dans la liste
+     * listSeance.add(getSeance(new Seance(rset.getInt(1)))); } while
+     * (rset.next()); }
+     * 
+     * rset.close(); return listSeance; }
+     */
 
     /**
      * Retourner la connexion associée.
@@ -83,55 +68,47 @@ public class TableSeance
     /**
      * Objet seance associé à une seance de la base de données
      * 
-     * @param seance
+     * @param id
      * @return Seance
-     * @throws SQLException
      */
-    public Seance getSeance(Seance seance) throws SQLException
+    public Seance getSeance(int id)
     {
-        stmtExisteSeance.setInt(1, seance.getId());
-        ResultSet rset = stmtExisteSeance.executeQuery();
-
-        if (rset.next())
-            seance = new Seance(seance.getId(), rset.getInt(2), rset.getDate(3));
-
-        rset.close();
-        return seance;
+        stmtExiste.setParameter(":idSeance", id);
+        return stmtExiste.getSingleResult();
     }
 
     /**
      * Suppresion des seances prevues du proces
      * 
      * @param id
-     * @throws SQLException
      * @throws IFT287Exception
      */
-    public void supprimerSeancesProcesTermine(int id) throws SQLException, IFT287Exception
+    public void supprimerSeancesProcesTermine(int id) throws IFT287Exception
     {
-        stmtSupprimerSeancesProcesTermine.setInt(1, id);
-        ResultSet rset = stmtSupprimerSeancesProcesTermine.executeQuery();
+        stmtSupprimerSeancesProcesTermine.setParameter(":idProces", id);
+        stmtSupprimerSeancesProcesTermine.setParameter(":date",
+                new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 
-        // Suppression des seances une a une
-        while (rset.next())
-        {
-            supprimer(new Seance(rset.getInt(1)));
-        }
-
-        rset.close();
+        for (Seance seance : stmtSupprimerSeancesProcesTermine.getResultList())
+            supprimer(new Seance(seance.getId()));
     }
 
     /**
      * Methode de traitement pour effectuerSupprimerSeance
      * 
      * @param seance
+     * @return le résultat de la suppression
      * 
      * @throws IFT287Exception
-     * @throws SQLException
      */
-    public void supprimer(Seance seance) throws IFT287Exception, SQLException
+    public boolean supprimer(Seance seance) throws IFT287Exception
     {
-        stmtSupprimerSeance.setInt(1, seance.getId());
-        stmtSupprimerSeance.executeUpdate();
+        if (seance != null)
+        {
+            cx.getConnection().remove(seance);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -139,15 +116,11 @@ public class TableSeance
      * 
      * @param id
      * @return boolean
-     * @throws SQLException
      */
-    public boolean existe(int id) throws SQLException
+    public boolean existe(int id)
     {
-        stmtExisteSeance.setInt(1, id);
-        ResultSet rset = stmtExisteSeance.executeQuery();
-        boolean seanceExiste = rset.next();
-        rset.close();
-        return seanceExiste;
+        stmtExiste.setParameter(":idSeance", id);
+        return !stmtExiste.getResultList().isEmpty();
     }
 
     /**
@@ -155,28 +128,23 @@ public class TableSeance
      * 
      * @param id
      * @return boolean
-     * @throws SQLException
      */
-    public boolean seancePassee(int id) throws SQLException
+    public boolean seancePassee(int id)
     {
-        stmtSeanceNonTerminee.setInt(1, id);
-        ResultSet rset = stmtSeanceNonTerminee.executeQuery();
-        boolean seancePassee = rset.next();
-        rset.close();
-        return seancePassee;
+        stmtSeanceNonTerminee.setParameter(":idSeance", id);
+        stmtSeanceNonTerminee.setParameter(":date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+        return !stmtSeanceNonTerminee.getResultList().isEmpty();
     }
 
     /**
      * Ajout de la seance
      * 
      * @param seance
-     * @throws SQLException
+     * @return la nouvelle seance ajouté
      */
-    public void ajout(Seance seance) throws SQLException
+    public Seance ajout(Seance seance)
     {
-        stmtInsertSeance.setInt(1, seance.getId());
-        stmtInsertSeance.setInt(2, seance.getProces_id());
-        stmtInsertSeance.setDate(3, seance.getDate());
-        stmtInsertSeance.executeUpdate();
+        cx.getConnection().persist(seance);
+        return seance;
     }
 }
