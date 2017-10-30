@@ -1,16 +1,25 @@
 package tp4;
 
+import javax.persistence.*;
+
 /**
  * Permet de représenter un tuple de la table jury.
  */
+
+@Entity
 public class TupleJury
 {
+    @Id
+    @GeneratedValue
+    private long m_id;
+
     private int nas;
     private String prenom;
     private String nom;
     private String sexe;
     private int age;
-    private int proces_id;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private TupleProces proces;
 
     /**
      * Constructeur par défaut
@@ -133,19 +142,18 @@ public class TupleJury
     }
 
     /**
-     * @return the proces_id
+     * @return the proces
      */
-    public int getProces_id()
+    public TupleProces getProces()
     {
-        return proces_id;
+        return proces;
     }
 
     /**
-     * @param proces_id
-     *            the proces_id to set
+     * @param proces
      */
-    public void setProces_id(int proces_id)
+    public void setProces(int proces)
     {
-        this.proces_id = proces_id;
+        this.proces = proces;
     }
 }

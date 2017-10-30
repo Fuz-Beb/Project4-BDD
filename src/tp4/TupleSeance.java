@@ -1,18 +1,22 @@
-/**
- * Permet de représenter un tuple de la table seance.
- */
 package tp4;
 
 import java.sql.Date;
+import javax.persistence.*;
 
 /**
- * @author Bebo
- *
+ * Permet de représenter un tuple de la table seance.
  */
+
+@Entity
 public class TupleSeance
 {
+    @Id
+    @GeneratedValue
+    private long m_id;
+    
     private int id;
-    private int proces_id;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private TupleProces proces;
     private Date date;
 
     /**
@@ -39,10 +43,10 @@ public class TupleSeance
      * @param proces_id
      * @param date
      */
-    public TupleSeance(int id, int proces_id, Date date)
+    public TupleSeance(int id, TupleProces proces, Date date)
     {
         this(id);
-        this.proces_id = proces_id;
+        this.proces = proces;
         this.date = date;
     }
 
@@ -64,20 +68,19 @@ public class TupleSeance
     }
 
     /**
-     * @return the proces_id
+     * @return TupleProces
      */
-    public int getProces_id()
+    public TupleProces getProces()
     {
-        return proces_id;
+        return proces;
     }
 
     /**
-     * @param proces_id
-     *            the proces_id to set
+     * @param proces
      */
-    public void setProces_id(int proces_id)
+    public void setProces(TupleProces proces)
     {
-        this.proces_id = proces_id;
+        this.proces = proces;
     }
 
     /**
@@ -96,5 +99,4 @@ public class TupleSeance
     {
         this.date = date;
     }
-
 }
