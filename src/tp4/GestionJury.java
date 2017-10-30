@@ -33,16 +33,16 @@ public class GestionJury
     /**
      * Ajout d'une jury dans la base de données
      * 
-     * @param tupleJury
+     * @param jury
      * @throws Exception
      */
-    public void ajouter(TupleJury tupleJury) throws Exception
+    public void ajouter(Jury jury) throws Exception
     {
         try
         {
-            if (jury.existe(tupleJury))
-                throw new IFT287Exception("Jury existe déjà : " + tupleJury.getNas());
-            jury.ajouter(tupleJury);
+            if (jury.existe(jury))
+                throw new IFT287Exception("Jury existe déjà : " + jury.getNas());
+            jury.ajouter(jury);
         }
         catch (Exception e)
         {
@@ -54,21 +54,21 @@ public class GestionJury
     /**
      * Afficher la liste des jurys
      * 
-     * @return ArrayList<TupleJury>
+     * @return ArrayList<Jury>
      *
      * @throws Exception
      */
-    public ArrayList<TupleJury> affichage() throws Exception
+    public ArrayList<Jury> affichage() throws Exception
     {
-        ArrayList<TupleJury> tupleJury = null;
+        ArrayList<Jury> jury = null;
 
         try
         {
-            tupleJury = jury.affichage();
+            jury = jury.affichage();
 
             cx.commit();
 
-            return tupleJury;
+            return jury;
         }
         catch (Exception e)
         {
@@ -80,19 +80,19 @@ public class GestionJury
     /**
      * Assigner un proces à un jury
      * 
-     * @param tupleProces
-     * @param tupleJury
+     * @param proces
+     * @param jury
      * @throws Exception
      */
-    public void assignerProces(TupleJury tupleJury, TupleProces tupleProces) throws Exception
+    public void assignerProces(Jury jury, Proces proces) throws Exception
     {
         try
         {
-            if (!proces.existe(tupleProces))
-                throw new IFT287Exception("Proces n'existe pas : " + tupleProces.getId());
-            if (!proces.devantJury(tupleProces))
-                throw new IFT287Exception("Le proces " + tupleProces.getId() + "doit se tenir devant un juge seul");
-            jury.assignerProces(tupleJury, tupleProces);
+            if (!proces.existe(proces))
+                throw new IFT287Exception("Proces n'existe pas : " + proces.getId());
+            if (!proces.devantJury(proces))
+                throw new IFT287Exception("Le proces " + proces.getId() + "doit se tenir devant un juge seul");
+            jury.assignerProces(jury, proces);
         }
         catch (Exception e)
         {

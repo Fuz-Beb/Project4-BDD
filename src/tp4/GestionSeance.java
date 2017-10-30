@@ -32,26 +32,26 @@ public class GestionSeance
      * Ajout d'une nouvelle seance dans la base de données. S'il existe déjà,
      * une exception est levée.
      * 
-     * @param tupleSeance
+     * @param seance
      * @throws Exception
      */
-    public void ajout(TupleSeance tupleSeance) throws Exception
+    public void ajout(Seance seance) throws Exception
     {
         try
         {
             // Vérification si la seance existe deja
-            if (seance.existe(tupleSeance.getId()))
-                throw new IFT287Exception("La seance existe deja: " + tupleSeance.getId());
+            if (seance.existe(seance.getId()))
+                throw new IFT287Exception("La seance existe deja: " + seance.getId());
 
             // Verification si le proces existe
-            if (!proces.existe(new TupleProces(tupleSeance.getProces_id())))
-                throw new IFT287Exception("Le proces " + tupleSeance.getProces_id() + " n'existe pas.");
+            if (!proces.existe(new Proces(seance.getProces_id())))
+                throw new IFT287Exception("Le proces " + seance.getProces_id() + " n'existe pas.");
 
             // Verification si le proces specifie n'est pas termine
-            if (!proces.verifierProcesTermine(new TupleProces(tupleSeance.getProces_id())))
-                throw new IFT287Exception("Le proces " + tupleSeance.getProces_id() + " est termine.");
+            if (!proces.verifierProcesTermine(new Proces(seance.getProces_id())))
+                throw new IFT287Exception("Le proces " + seance.getProces_id() + " est termine.");
 
-            seance.ajout(tupleSeance);
+            seance.ajout(seance);
 
             cx.commit();
         }
@@ -65,22 +65,22 @@ public class GestionSeance
     /**
      * Supprimer une seance
      * 
-     * @param tupleSeance
+     * @param seance
      * @throws Exception
      */
-    public void supprimer(TupleSeance tupleSeance) throws Exception
+    public void supprimer(Seance seance) throws Exception
     {
         try
         {
             // Vérification si la seance existe
-            if (!seance.existe(tupleSeance.getId()))
-                throw new IFT287Exception("La seance n'existe pas : " + tupleSeance.getId());
+            if (!seance.existe(seance.getId()))
+                throw new IFT287Exception("La seance n'existe pas : " + seance.getId());
 
             // Vérification que la seance n'est pas encore passée
-            if (seance.seancePassee(tupleSeance.getId()))
-                throw new IFT287Exception("La seance " + tupleSeance.getId() + " est déjà passée.");
+            if (seance.seancePassee(seance.getId()))
+                throw new IFT287Exception("La seance " + seance.getId() + " est déjà passée.");
 
-            seance.supprimer(tupleSeance);
+            seance.supprimer(seance);
 
             cx.commit();
         }
@@ -92,20 +92,20 @@ public class GestionSeance
     }
 
     /**
-     * @param tupleProces
-     * @return ArrayList<TupleSeance>
+     * @param proces
+     * @return ArrayList<Seance>
      * @throws Exception
      */
-    public ArrayList<TupleSeance> affichage(TupleProces tupleProces) throws Exception
+    public ArrayList<Seance> affichage(Proces proces) throws Exception
     {
-        ArrayList<TupleSeance> listSeance = new ArrayList<TupleSeance>();
+        ArrayList<Seance> listSeance = new ArrayList<Seance>();
 
         try
         {
-            if (!proces.existe(tupleProces))
-                throw new IFT287Exception("Le proces " + tupleProces.getId() + "n'existe pas");
+            if (!proces.existe(proces))
+                throw new IFT287Exception("Le proces " + proces.getId() + "n'existe pas");
 
-            listSeance = seance.affichage(tupleProces);
+            listSeance = seance.affichage(proces);
 
             cx.commit();
 

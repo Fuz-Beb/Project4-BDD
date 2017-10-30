@@ -33,18 +33,18 @@ public class GestionJuge
     /**
      * Ajout d'un nouveau juge dans la base de données
      * 
-     * @param tupleJuge
+     * @param juge
      * 
      * @throws Exception
      */
-    public void ajouter(TupleJuge tupleJuge) throws Exception
+    public void ajouter(Juge juge) throws Exception
     {
         try
         {
-            if (juge.existe(tupleJuge))
-                throw new IFT287Exception("Le juge existe déjà : " + tupleJuge.getId());
+            if (juge.existe(juge))
+                throw new IFT287Exception("Le juge existe déjà : " + juge.getId());
 
-            juge.ajouter(tupleJuge);
+            juge.ajouter(juge);
         }
         catch (Exception e)
         {
@@ -56,10 +56,10 @@ public class GestionJuge
     /**
      * Afficher la liste des juges actifs et disponibles
      * 
-     * @return ArrayList<TupleJuge>
+     * @return ArrayList<Juge>
      * @throws Exception
      */
-    public ArrayList<TupleJuge> affichage() throws Exception
+    public ArrayList<Juge> affichage() throws Exception
     {
         try
         {
@@ -75,18 +75,18 @@ public class GestionJuge
     /**
      * Retirer un juge
      * 
-     * @param tupleJuge
+     * @param juge
      * @throws Exception
      */
-    public void retirer(TupleJuge tupleJuge) throws Exception
+    public void retirer(Juge juge) throws Exception
     {
         try
         {
-            if (!juge.existe(tupleJuge))
-                throw new IFT287Exception("Juge inexistant : " + tupleJuge.getId());
-            if (proces.jugeEnCours(tupleJuge))
-                throw new IFT287Exception("Le juge " + tupleJuge.getId() + " n'a pas terminé tout ses procès");
-            juge.retirer(tupleJuge);
+            if (!juge.existe(juge))
+                throw new IFT287Exception("Juge inexistant : " + juge.getId());
+            if (proces.jugeEnCours(juge))
+                throw new IFT287Exception("Le juge " + juge.getId() + " n'a pas terminé tout ses procès");
+            juge.retirer(juge);
         }
         catch (Exception e)
         {

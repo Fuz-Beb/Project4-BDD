@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 
 @Entity
-public class TuplePartie
+public class Partie
 {
     @Id
     @GeneratedValue
@@ -24,7 +24,7 @@ public class TuplePartie
     /**
      * Constructeur par défaut
      */
-    public TuplePartie()
+    public Partie()
     {
     }
 
@@ -36,7 +36,7 @@ public class TuplePartie
      * @param nom
      * @param avocat_id
      */
-    public TuplePartie(int id, String prenom, String nom, int avocat_id)
+    public Partie(int id, String prenom, String nom, int avocat_id)
     {
         this.id = id;
         this.prenom = prenom;
@@ -49,7 +49,7 @@ public class TuplePartie
      * 
      * @param id
      */
-    public TuplePartie(int id)
+    public Partie(int id)
     {
         this.id = id;
     }

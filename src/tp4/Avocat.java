@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 
 @Entity
-public class TupleAvocat
+public class Avocat
 {
     @Id
     @GeneratedValue
@@ -20,7 +20,7 @@ public class TupleAvocat
     /**
      * Constructeur par défaut
      */
-    public TupleAvocat()
+    public Avocat()
     {
     }
 
@@ -32,7 +32,7 @@ public class TupleAvocat
      * @param nom
      * @param type
      */
-    public TupleAvocat(int id, String prenom, String nom, int type)
+    public Avocat(int id, String prenom, String nom, int type)
     {
         super();
         this.id = id;
@@ -46,7 +46,7 @@ public class TupleAvocat
      * 
      * @param id
      */
-    public TupleAvocat(int id)
+    public Avocat(int id)
     {
         this.id = id;
     }

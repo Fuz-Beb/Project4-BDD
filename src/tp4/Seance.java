@@ -9,7 +9,7 @@ import java.sql.Date;
  * @author Bebo
  *
  */
-public class TupleSeance
+public class Seance
 {
     private int id;
     private int proces_id;
@@ -18,7 +18,7 @@ public class TupleSeance
     /**
      * Constructeur par défaut
      */
-    public TupleSeance()
+    public Seance()
     {
     }
 
@@ -27,7 +27,7 @@ public class TupleSeance
      * 
      * @param id
      */
-    public TupleSeance(int id)
+    public Seance(int id)
     {
         this.id = id;
     }
@@ -39,7 +39,7 @@ public class TupleSeance
      * @param proces_id
      * @param date
      */
-    public TupleSeance(int id, int proces_id, Date date)
+    public Seance(int id, int proces_id, Date date)
     {
         this(id);
         this.proces_id = proces_id;

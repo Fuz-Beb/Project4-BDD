@@ -1,7 +1,5 @@
 package tp4;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.persistence.TypedQuery;
@@ -11,7 +9,7 @@ import javax.persistence.TypedQuery;
  */
 public class TableAvocat
 {
-    private TypedQuery<TupleAvocat> stmtExiste;
+    private TypedQuery<Avocat> stmtExiste;
     private Connexion cx;
 
     /**
@@ -24,10 +22,7 @@ public class TableAvocat
     public TableAvocat(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select m from Membre m where m.m_idMembre = :idMembre", Membre.class);
-                prepareStatement("select * from \"Avocat\" where \"id\" = ?");
-        stmtInsert = cx.getConnection()
-                .prepareStatement("insert into \"Avocat\" (id, prenom, nom, type) values (?,?,?,?)");
+        stmtExiste = cx.getConnection().createQuery("select m from Membre m where m.m_idMembre = :idMembre", Avocat.class);
     }
 
     /**
@@ -43,31 +38,26 @@ public class TableAvocat
     /**
      * Vérifie si l'avocat existe
      * 
-     * @param tupleAvocat 
+     * @param avocat 
      * @return boolean
      * @throws SQLException
      */
-    public boolean existe(TupleAvocat tupleAvocat) throws SQLException
+    public boolean existe(Avocat avocat) throws SQLException
     {
-        stmtExiste.setInt(1, tupleAvocat.getId());
-        ResultSet rset = stmtExiste.executeQuery();
-        boolean avocatExiste = rset.next();
-        rset.close();
-        return avocatExiste;
+        stmtExiste.setParameter(1, avocat.getId());
+        return !stmtExiste.getResultList().isEmpty();
     }
 
     /**
      * Ajout d'un nouvelle avocat dans la base de données
      * 
-     * @param tupleAvocat
+     * @param avocat
+     * @return Avocat
      * @throws SQLException
      */
-    public void ajouter(TupleAvocat tupleAvocat) throws SQLException
+    public Avocat ajouter(Avocat avocat) throws SQLException
     {
-        stmtInsert.setInt(1, tupleAvocat.getId());
-        stmtInsert.setString(2, tupleAvocat.getPrenom());
-        stmtInsert.setString(3, tupleAvocat.getNom());
-        stmtInsert.setInt(4, tupleAvocat.getType());
-        stmtInsert.executeUpdate();
+        cx.getConnection().persist(avocat);
+        return avocat;
     }
 }

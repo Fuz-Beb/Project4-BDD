@@ -45,15 +45,15 @@ public class TableSeance
     /**
      * Affichage des seances lie a un proces
      * 
-     * @param tupleProces
+     * @param proces
      * @return String
      * @throws SQLException
      */
-    public ArrayList<TupleSeance> affichage(TupleProces tupleProces) throws SQLException
+    public ArrayList<Seance> affichage(Proces proces) throws SQLException
     {
-        ArrayList<TupleSeance> listSeance = new ArrayList<TupleSeance>();
+        ArrayList<Seance> listSeance = new ArrayList<Seance>();
 
-        stmtExisteProcesDansSeance.setInt(1, tupleProces.getId());
+        stmtExisteProcesDansSeance.setInt(1, proces.getId());
         ResultSet rset = stmtExisteProcesDansSeance.executeQuery();
 
         if (rset.next())
@@ -61,7 +61,7 @@ public class TableSeance
             do
             {
                 // Ajout de chacun des juges dans la liste
-                listSeance.add(getSeance(new TupleSeance(rset.getInt(1))));
+                listSeance.add(getSeance(new Seance(rset.getInt(1))));
             }
             while (rset.next());
         }
@@ -83,20 +83,20 @@ public class TableSeance
     /**
      * Objet seance associé à une seance de la base de données
      * 
-     * @param tupleSeance
-     * @return TupleSeance
+     * @param seance
+     * @return Seance
      * @throws SQLException
      */
-    public TupleSeance getSeance(TupleSeance tupleSeance) throws SQLException
+    public Seance getSeance(Seance seance) throws SQLException
     {
-        stmtExisteSeance.setInt(1, tupleSeance.getId());
+        stmtExisteSeance.setInt(1, seance.getId());
         ResultSet rset = stmtExisteSeance.executeQuery();
 
         if (rset.next())
-            tupleSeance = new TupleSeance(tupleSeance.getId(), rset.getInt(2), rset.getDate(3));
+            seance = new Seance(seance.getId(), rset.getInt(2), rset.getDate(3));
 
         rset.close();
-        return tupleSeance;
+        return seance;
     }
 
     /**
@@ -114,7 +114,7 @@ public class TableSeance
         // Suppression des seances une a une
         while (rset.next())
         {
-            supprimer(new TupleSeance(rset.getInt(1)));
+            supprimer(new Seance(rset.getInt(1)));
         }
 
         rset.close();
@@ -123,14 +123,14 @@ public class TableSeance
     /**
      * Methode de traitement pour effectuerSupprimerSeance
      * 
-     * @param tupleSeance
+     * @param seance
      * 
      * @throws IFT287Exception
      * @throws SQLException
      */
-    public void supprimer(TupleSeance tupleSeance) throws IFT287Exception, SQLException
+    public void supprimer(Seance seance) throws IFT287Exception, SQLException
     {
-        stmtSupprimerSeance.setInt(1, tupleSeance.getId());
+        stmtSupprimerSeance.setInt(1, seance.getId());
         stmtSupprimerSeance.executeUpdate();
     }
 
@@ -169,14 +169,14 @@ public class TableSeance
     /**
      * Ajout de la seance
      * 
-     * @param tupleSeance
+     * @param seance
      * @throws SQLException
      */
-    public void ajout(TupleSeance tupleSeance) throws SQLException
+    public void ajout(Seance seance) throws SQLException
     {
-        stmtInsertSeance.setInt(1, tupleSeance.getId());
-        stmtInsertSeance.setInt(2, tupleSeance.getProces_id());
-        stmtInsertSeance.setDate(3, tupleSeance.getDate());
+        stmtInsertSeance.setInt(1, seance.getId());
+        stmtInsertSeance.setInt(2, seance.getProces_id());
+        stmtInsertSeance.setDate(3, seance.getDate());
         stmtInsertSeance.executeUpdate();
     }
 }

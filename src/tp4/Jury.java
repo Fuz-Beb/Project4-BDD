@@ -3,7 +3,7 @@ package tp4;
 /**
  * Permet de représenter un tuple de la table jury.
  */
-public class TupleJury
+public class Jury
 {
     private int nas;
     private String prenom;
@@ -15,7 +15,7 @@ public class TupleJury
     /**
      * Constructeur par défaut
      */
-    public TupleJury()
+    public Jury()
     {
     }
 
@@ -24,7 +24,7 @@ public class TupleJury
      * 
      * @param nas
      */
-    public TupleJury(int nas)
+    public Jury(int nas)
     {
         this.nas = nas;
     }
@@ -38,7 +38,7 @@ public class TupleJury
      * @param sexe
      * @param age
      */
-    public TupleJury(int nas, String prenom, String nom, String sexe, int age)
+    public Jury(int nas, String prenom, String nom, String sexe, int age)
     {
         this(nas);
         this.prenom = prenom;

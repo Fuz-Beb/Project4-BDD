@@ -32,25 +32,25 @@ public class GestionPartie
      * Ajout d'un nouveau partie dans la base de données. S'il existe déjà, une
      * exception est levée.
      * 
-     * @param tuplePartie
+     * @param partie
      * @throws SQLException
      * @throws IFT287Exception
      * @throws Exception
      */
-    public void ajout(TuplePartie tuplePartie) throws SQLException, IFT287Exception, Exception
+    public void ajout(Partie partie) throws SQLException, IFT287Exception, Exception
     {
         try
         {
             // Vérifie si le partie existe déjà
-            if (partie.existe(tuplePartie))
-                throw new IFT287Exception("Partie existe déjà: " + tuplePartie.getId());
+            if (partie.existe(partie))
+                throw new IFT287Exception("Partie existe déjà: " + partie.getId());
 
             // Vérifie si l'avocat existe
-            if (!avocat.existe(new TupleAvocat(tuplePartie.getAvocat_id())))
-                throw new IFT287Exception("L'avocat " + tuplePartie.getAvocat_id() + "n'existe pas.");
+            if (!avocat.existe(new Avocat(partie.getAvocat_id())))
+                throw new IFT287Exception("L'avocat " + partie.getAvocat_id() + "n'existe pas.");
 
             // Ajout du partie
-            partie.ajout(tuplePartie);
+            partie.ajout(partie);
 
             // Commit
             cx.commit();

@@ -3,7 +3,7 @@ package tp4;
 /**
  * Permet de représenter un tuple de la table juge.
  */
-public class TupleJuge
+public class Juge
 {
     private int id;
     private String prenom;
@@ -15,7 +15,7 @@ public class TupleJuge
     /**
      * Constructeur par défaut
      */
-    public TupleJuge()
+    public Juge()
     {
     }
 
@@ -24,7 +24,7 @@ public class TupleJuge
      * 
      * @param id
      */
-    public TupleJuge(int id)
+    public Juge(int id)
     {
         this.id = id;
     }
@@ -37,7 +37,7 @@ public class TupleJuge
      * @param nom
      * @param age
      */
-    public TupleJuge(int id, String prenom, String nom, int age)
+    public Juge(int id, String prenom, String nom, int age)
     {
         this(id);
         this.prenom = prenom;

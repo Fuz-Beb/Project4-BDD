@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 
 @Entity
-public class TupleProces
+public class Proces
 {
     @Id
     @GeneratedValue
@@ -29,7 +29,7 @@ public class TupleProces
     /**
      * Constructeur par défaut
      */
-    public TupleProces()
+    public Proces()
     {
     }
 
@@ -38,7 +38,7 @@ public class TupleProces
      * 
      * @param id
      */
-    public TupleProces(int id)
+    public Proces(int id)
     {
         this.id = id;
     }
@@ -53,7 +53,7 @@ public class TupleProces
      * @param partieDefenderesse_id
      * @param partiePoursuivant_id
      */
-    public TupleProces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id,
+    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id,
             int partiePoursuivant_id)
     {
         this(id);

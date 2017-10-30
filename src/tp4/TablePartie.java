@@ -41,13 +41,13 @@ public class TablePartie
     /**
      * Vérifie si un partie existe.
      * 
-     * @param tuplePartie
+     * @param partie
      * @return boolean
      * @throws SQLException
      */
-    public boolean existe(TuplePartie tuplePartie) throws SQLException
+    public boolean existe(Partie partie) throws SQLException
     {
-        stmtExistePartie.setInt(1, tuplePartie.getId());
+        stmtExistePartie.setInt(1, partie.getId());
         ResultSet rset = stmtExistePartie.executeQuery();
         boolean partieExiste = rset.next();
         rset.close();
@@ -57,16 +57,16 @@ public class TablePartie
     /**
      * Ajout d'un nouveau partie
      * 
-     * @param tuplePartie
+     * @param partie
      * @throws SQLException
      */
-    public void ajout(TuplePartie tuplePartie) throws SQLException
+    public void ajout(Partie partie) throws SQLException
     {
         /* Ajout du partie. */
-        stmtInsertPartie.setInt(1, tuplePartie.getId());
-        stmtInsertPartie.setString(2, tuplePartie.getPrenom());
-        stmtInsertPartie.setString(3, tuplePartie.getNom());
-        stmtInsertPartie.setInt(4, tuplePartie.getAvocat_id());
+        stmtInsertPartie.setInt(1, partie.getId());
+        stmtInsertPartie.setString(2, partie.getPrenom());
+        stmtInsertPartie.setString(3, partie.getNom());
+        stmtInsertPartie.setInt(4, partie.getAvocat_id());
         stmtInsertPartie.executeUpdate();
     }
 }
