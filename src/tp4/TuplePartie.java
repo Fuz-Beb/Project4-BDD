@@ -3,13 +3,20 @@
  */
 package tp4;
 
+import javax.persistence.*;
+
 /**
- * @author Bebo
+ * Permet de représenter un tuple de la table partie.
  *
  */
+
+@Entity
 public class TuplePartie
 {
+    @Id
+    @GeneratedValue
     private int id;
+    
     private String prenom;
     private String nom;
     private int avocat_id;

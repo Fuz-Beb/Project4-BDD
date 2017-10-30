@@ -4,13 +4,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.persistence.TypedQuery;
+
 /**
  * Permet d'effectuer les accès à la table avocat.
  */
 public class TableAvocat
 {
-    private static PreparedStatement stmtExiste;
-    private static PreparedStatement stmtInsert;
+    private TypedQuery<TupleAvocat> stmtExiste;
     private Connexion cx;
 
     /**
@@ -23,7 +24,8 @@ public class TableAvocat
     public TableAvocat(Connexion cx) throws SQLException
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().prepareStatement("select * from \"Avocat\" where \"id\" = ?");
+        stmtExiste = cx.getConnection().createQuery("select m from Membre m where m.m_idMembre = :idMembre", Membre.class);
+                prepareStatement("select * from \"Avocat\" where \"id\" = ?");
         stmtInsert = cx.getConnection()
                 .prepareStatement("insert into \"Avocat\" (id, prenom, nom, type) values (?,?,?,?)");
     }
