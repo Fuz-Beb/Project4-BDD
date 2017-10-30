@@ -87,7 +87,7 @@ public class Proces
     /**
      * @return the juge
      */
-    public Juge getjuge()
+    public Juge getJuge()
     {
         return juge;
     }
@@ -96,7 +96,7 @@ public class Proces
      * @param juge
      *            the juge to set
      */
-    public void setjuge(Juge juge)
+    public void setJuge(Juge juge)
     {
         this.juge = juge;
     }
@@ -138,7 +138,7 @@ public class Proces
     /**
      * @return the partieDefenderesse
      */
-    public Partie getpartieDefenderesse()
+    public Partie getPartieDefenderesse()
     {
         return partieDefenderesse;
     }
@@ -147,7 +147,7 @@ public class Proces
      * @param partieDefenderesse
      *            the partieDefenderesse to set
      */
-    public void setpartieDefenderesse(Partie partieDefenderesse)
+    public void setPartieDefenderesse(Partie partieDefenderesse)
     {
         this.partieDefenderesse = partieDefenderesse;
     }
@@ -155,7 +155,7 @@ public class Proces
     /**
      * @return the partiePoursuivant
      */
-    public Partie getpartiePoursuivant()
+    public Partie getPartiePoursuivant()
     {
         return partiePoursuivant;
     }
@@ -164,7 +164,7 @@ public class Proces
      * @param partiePoursuivant
      *            the partiePoursuivant to set
      */
-    public void setpartiePoursuivant(Partie partiePoursuivant)
+    public void setPartiePoursuivant(Partie partiePoursuivant)
     {
         this.partiePoursuivant = partiePoursuivant;
     }
