@@ -1,11 +1,18 @@
 package tp4;
 
+import javax.persistence.*;
+
 /**
  * Permet de représenter un tuple de la table avocat.
  */
+
+@Entity
 public class TupleAvocat
 {
+    @Id
+    @GeneratedValue
     private int id;
+    
     private String prenom;
     private String nom;
     private int type;

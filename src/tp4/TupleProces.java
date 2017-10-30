@@ -5,13 +5,20 @@ package tp4;
 
 import java.sql.Date;
 
+import javax.persistence.*;
+
 /**
- * @author Bebo
+ * Permet de représenter un tuple de la table proces.
  *
  */
+
+@Entity
 public class TupleProces
 {
+    @Id
+    @GeneratedValue
     private int id;
+    
     private int juge_id;
     private Date date;
     private int devantJury;
