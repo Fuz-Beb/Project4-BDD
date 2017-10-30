@@ -1,4 +1,4 @@
-package tp3;
+package tp4;
 
 /**
  * L'exception IFT287Exception est levee lorsqu'une transaction est inadequate.

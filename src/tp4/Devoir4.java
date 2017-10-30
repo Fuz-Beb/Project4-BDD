@@ -2,7 +2,7 @@
 // Pierrick BOBET - 17 131 792
 // Rémy BOUTELOUP - 17 132 265
 
-package tp3;
+package tp4;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import java.sql.*;
  *     transaction
  * </pre>
  */
-public class Devoir3
+public class Devoir4
 {
     private static GestionJustice gestionJustice;
 
@@ -52,7 +52,7 @@ public class Devoir3
      */
     public static void main(String[] args) throws Exception
     {
-        Devoir3 instanceDevoir3 = null;
+        Devoir4 instanceDevoir3 = null;
 
         if (args.length < 4)
         {
@@ -62,7 +62,7 @@ public class Devoir3
 
         try
         {
-            instanceDevoir3 = new Devoir3(args[0], args[1], args[2], args[3]);
+            instanceDevoir3 = new Devoir4(args[0], args[1], args[2], args[3]);
 
             BufferedReader reader = ouvrirFichier(args);
             String transaction = lireTransaction(reader);
@@ -89,7 +89,7 @@ public class Devoir3
      * @throws IFT287Exception
      * @throws SQLException
      */
-    public Devoir3(String serveur, String bd, String user, String pass) throws IFT287Exception, SQLException
+    public Devoir4(String serveur, String bd, String user, String pass) throws IFT287Exception, SQLException
     {
         gestionJustice = new GestionJustice(serveur, bd, user, pass);
     }

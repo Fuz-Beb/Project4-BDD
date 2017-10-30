@@ -1,7 +1,7 @@
 /**
  * Permet de représenter un tuple de la table partie.
  */
-package tp3;
+package tp4;
 
 /**
  * @author Bebo
