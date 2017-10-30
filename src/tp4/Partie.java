@@ -1,6 +1,3 @@
-/**
- * Permet de représenter un tuple de la table partie.
- */
 package tp4;
 
 import javax.persistence.*;
@@ -19,7 +16,8 @@ public class Partie
     
     private String prenom;
     private String nom;
-    private int avocat_id;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Avocat avocat;
 
     /**
      * Constructeur par défaut
@@ -34,14 +32,14 @@ public class Partie
      * @param id
      * @param prenom
      * @param nom
-     * @param avocat_id
+     * @param avocat
      */
-    public Partie(int id, String prenom, String nom, int avocat_id)
+    public Partie(int id, String prenom, String nom, Avocat avocat)
     {
         this.id = id;
         this.prenom = prenom;
         this.nom = nom;
-        this.avocat_id = avocat_id;
+        this.avocat = avocat;
     }
 
     /**
@@ -106,19 +104,19 @@ public class Partie
     }
 
     /**
-     * @return the avocat_id
+     * @return avocat
      */
-    public int getAvocat_id()
+    public Avocat getAvocat_id()
     {
-        return avocat_id;
+        return avocat;
     }
 
     /**
-     * @param avocat_id
+     * @param avocat
      *            the avocat_id to set
      */
-    public void setAvocat_id(int avocat_id)
+    public void setAvocat_id(Avocat avocat)
     {
-        this.avocat_id = avocat_id;
+        this.avocat = avocat;
     }
 }

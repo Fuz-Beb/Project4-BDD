@@ -1,10 +1,18 @@
 package tp4;
 
+import javax.persistence.*;
+
 /**
  * Permet de représenter un tuple de la table juge.
  */
+
+@Entity
 public class Juge
 {
+    @Id
+    @GeneratedValue
+    private long m_id;
+    
     private int id;
     private String prenom;
     private String nom;

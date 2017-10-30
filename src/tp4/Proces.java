@@ -19,11 +19,14 @@ public class Proces
     @GeneratedValue
     private int id;
     
-    private int juge_id;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Juge juge;
     private Date date;
     private int devantJury;
-    private int partieDefenderesse_id;
-    private int partiePoursuivant_id;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Partie partieDefenderesse;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Partie partiePoursuivant;
     private int decision;
 
     /**
@@ -47,21 +50,21 @@ public class Proces
      * Constructeur de confort
      * 
      * @param id
-     * @param juge_id
+     * @param juge
      * @param date
      * @param devantJury
-     * @param partieDefenderesse_id
-     * @param partiePoursuivant_id
+     * @param partieDefenderesse
+     * @param partiePoursuivant
      */
-    public Proces(int id, int juge_id, Date date, int devantJury, int partieDefenderesse_id,
-            int partiePoursuivant_id)
+    public Proces(int id, Juge juge, Date date, int devantJury, Partie partieDefenderesse,
+            Partie partiePoursuivant)
     {
         this(id);
-        this.juge_id = juge_id;
+        this.juge = juge;
         this.date = date;
         this.devantJury = devantJury;
-        this.partieDefenderesse_id = partieDefenderesse_id;
-        this.partiePoursuivant_id = partiePoursuivant_id;
+        this.partieDefenderesse = partieDefenderesse;
+        this.partiePoursuivant = partiePoursuivant;
     }
 
     /**
@@ -82,20 +85,20 @@ public class Proces
     }
 
     /**
-     * @return the juge_id
+     * @return the juge
      */
-    public int getJuge_id()
+    public Juge getjuge()
     {
-        return juge_id;
+        return juge;
     }
 
     /**
-     * @param juge_id
-     *            the juge_id to set
+     * @param juge
+     *            the juge to set
      */
-    public void setJuge_id(int juge_id)
+    public void setjuge(Juge juge)
     {
-        this.juge_id = juge_id;
+        this.juge = juge;
     }
 
     /**
@@ -133,37 +136,37 @@ public class Proces
     }
 
     /**
-     * @return the partieDefenderesse_id
+     * @return the partieDefenderesse
      */
-    public int getPartieDefenderesse_id()
+    public Partie getpartieDefenderesse()
     {
-        return partieDefenderesse_id;
+        return partieDefenderesse;
     }
 
     /**
-     * @param partieDefenderesse_id
-     *            the partieDefenderesse_id to set
+     * @param partieDefenderesse
+     *            the partieDefenderesse to set
      */
-    public void setPartieDefenderesse_id(int partieDefenderesse_id)
+    public void setpartieDefenderesse(Partie partieDefenderesse)
     {
-        this.partieDefenderesse_id = partieDefenderesse_id;
+        this.partieDefenderesse = partieDefenderesse;
     }
 
     /**
-     * @return the partiePoursuivant_id
+     * @return the partiePoursuivant
      */
-    public int getPartiePoursuivant_id()
+    public Partie getpartiePoursuivant()
     {
-        return partiePoursuivant_id;
+        return partiePoursuivant;
     }
 
     /**
-     * @param partiePoursuivant_id
-     *            the partiePoursuivant_id to set
+     * @param partiePoursuivant
+     *            the partiePoursuivant to set
      */
-    public void setPartiePoursuivant_id(int partiePoursuivant_id)
+    public void setpartiePoursuivant(Partie partiePoursuivant)
     {
-        this.partiePoursuivant_id = partiePoursuivant_id;
+        this.partiePoursuivant = partiePoursuivant;
     }
 
     /**
