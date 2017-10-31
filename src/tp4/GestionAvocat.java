@@ -44,4 +44,31 @@ public class GestionAvocat
                 cx.getConnection().getTransaction().rollback();
         }
     }
+
+    /**
+     * Retourne l'avocat demandé et reçu par TableAvocat
+     * 
+     * @param id
+     * @return Avocat
+     * @throws Exception
+     */
+    public Avocat getAvocat(int id) throws Exception
+    {
+        Avocat list = null;
+        try
+        {
+            cx.getConnection().getTransaction().begin();
+
+            list = avocat.getAvocat(id);
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
+        }
+        finally
+        {
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
+        }
+    }
 }

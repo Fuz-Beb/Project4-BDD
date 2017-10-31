@@ -53,14 +53,14 @@ public class GestionProces
         try
         {
             cx.getConnection().getTransaction().begin();
-            
+
             if (!proces.existe(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
             else
                 list = proces.affichage(procesArg);
-            
+
             cx.getConnection().getTransaction().commit();
-            
+
             return list;
         }
         finally
@@ -82,7 +82,7 @@ public class GestionProces
         try
         {
             cx.getConnection().getTransaction().begin();
-            
+
             int idJuge = 0;
 
             // Verification de la valeur de la decision
@@ -108,7 +108,7 @@ public class GestionProces
             seance.supprimerSeancesProcesTermine(procesArg.getId());
 
             cx.getConnection().getTransaction().commit();
-            
+
         }
         finally
         {
@@ -128,7 +128,7 @@ public class GestionProces
         try
         {
             cx.getConnection().getTransaction().begin();
-            
+
             if (procesArg.getDevantJury() != 0 && procesArg.getDevantJury() != 1)
                 throw new IFT287Exception("Impossible de creer le proces " + procesArg.getId()
                         + "car le champ devantJury ne peut être que 0 ou 1");
@@ -152,6 +152,33 @@ public class GestionProces
             juge.changerDisponibilite(false, new Juge(procesArg.getJuge().getId()));
 
             cx.getConnection().getTransaction().commit();
+        }
+        finally
+        {
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
+        }
+    }
+
+    /**
+     * Retourne le proces demandé et reçu par TableProces
+     * 
+     * @param id
+     * @return Partie
+     * @throws Exception
+     */
+    public Proces getProces(int id) throws Exception
+    {
+        Proces list = null;
+        try
+        {
+            cx.getConnection().getTransaction().begin();
+
+            list = proces.getProces(id);
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
         }
         finally
         {

@@ -108,4 +108,31 @@ public class GestionJuge
                 cx.getConnection().getTransaction().rollback();
         }
     }
+
+    /**
+     * Retourne le juge demandé et reçu par TableJuge
+     * 
+     * @param id
+     * @return Juge
+     * @throws Exception
+     */
+    public Juge getJuge(int id) throws Exception
+    {
+        Juge list = null;
+        try
+        {
+            cx.getConnection().getTransaction().begin();
+
+            list = juge.getJuge(id);
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
+        }
+        finally
+        {
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
+        }
+    }
 }

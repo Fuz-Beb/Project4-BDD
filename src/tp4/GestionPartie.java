@@ -39,7 +39,7 @@ public class GestionPartie
         try
         {
             cx.getConnection().getTransaction().begin();
-            
+
             // Vérifie si le partie existe déjà
             if (partie.existe(partieArg))
                 throw new IFT287Exception("Partie existe déjà: " + partieArg.getId());
@@ -52,6 +52,33 @@ public class GestionPartie
             partie.ajout(partieArg);
 
             cx.getConnection().getTransaction().commit();
+        }
+        finally
+        {
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
+        }
+    }
+
+    /**
+     * Retourne le partie demandé et reçu par TablePartie
+     * 
+     * @param id
+     * @return Partie
+     * @throws Exception
+     */
+    public Partie getPartie(int id) throws Exception
+    {
+        Partie list = null;
+        try
+        {
+            cx.getConnection().getTransaction().begin();
+
+            list = partie.getPartie(id);
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
         }
         finally
         {

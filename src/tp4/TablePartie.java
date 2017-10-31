@@ -34,6 +34,19 @@ public class TablePartie
     }
 
     /**
+     * Retourne le partie demandé
+     * 
+     * @param id
+     * @return Partie
+     * @throws Exception
+     */
+    public Partie getPartie(int id) throws Exception
+    {
+        stmtExiste.setParameter("id", id);
+        return stmtExiste.getSingleResult();
+    }
+
+    /**
      * Vérifie si un partie existe.
      * 
      * @param partie

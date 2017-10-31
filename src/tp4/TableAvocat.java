@@ -1,7 +1,5 @@
 package tp4;
 
-import java.sql.SQLException;
-
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
@@ -18,7 +16,6 @@ public class TableAvocat
      * précompilés.
      * 
      * @param cx
-     * @throws SQLException
      */
     public TableAvocat(Connexion cx)
     {
@@ -34,6 +31,19 @@ public class TableAvocat
     public Connexion getConnexion()
     {
         return cx;
+    }
+
+    /**
+     * Retourne l'avocat demandé
+     * 
+     * @param id
+     * @return Avocat
+     * @throws Exception
+     */
+    public Avocat getAvocat(int id) throws Exception
+    {
+        stmtExiste.setParameter("id", id);
+        return stmtExiste.getSingleResult();
     }
 
     /**
@@ -53,8 +63,8 @@ public class TableAvocat
      * 
      * @param avocat
      * @return Avocat
-     * @throws IllegalArgumentException 
-     * @throws TransactionRequiredException 
+     * @throws IllegalArgumentException
+     * @throws TransactionRequiredException
      */
     public Avocat ajouter(Avocat avocat) throws IllegalArgumentException, TransactionRequiredException
     {
