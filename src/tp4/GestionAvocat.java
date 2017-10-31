@@ -22,18 +22,18 @@ public class GestionAvocat
     /**
      * Ajout d'un nouvelle avocat dans la base de données
      * 
-     * @param avocat
+     * @param avocatArg
      * @throws Exception
      */
-    public void ajouter(Avocat avocat) throws Exception
+    public void ajouter(Avocat avocatArg) throws Exception
     {
         try
         {
             // Vérifie si l'avocat existe déjà
-            if (avocat.existe(avocat))
-                throw new IFT287Exception("L'avocat existe déjà : " + avocat.getId());
+            if (avocat.existe(avocatArg))
+                throw new IFT287Exception("L'avocat existe déjà : " + avocatArg.getId());
 
-            avocat.ajouter(avocat);
+            avocat.ajouter(avocatArg);
 
             cx.commit();
         }

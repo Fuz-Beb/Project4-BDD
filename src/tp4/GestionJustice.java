@@ -1,7 +1,5 @@
 package tp4;
 
-import java.sql.SQLException;
-
 /**
  * Système de gestion d'un palais de justice
  */
@@ -32,9 +30,8 @@ public class GestionJustice
      * @param user
      * @param password
      * @throws IFT287Exception
-     * @throws SQLException
      */
-    public GestionJustice(String serveur, String bd, String user, String password) throws IFT287Exception, SQLException
+    public GestionJustice(String serveur, String bd, String user, String password) throws IFT287Exception
     {
         cx = new Connexion(serveur, bd, user, password);
 
@@ -55,10 +52,8 @@ public class GestionJustice
 
     /**
      * Fermer la connexion
-     * 
-     * @throws SQLException
      */
-    public void fermer() throws SQLException
+    public void fermer()
     {
         cx.fermer();
     }

@@ -33,18 +33,18 @@ public class GestionJuge
     /**
      * Ajout d'un nouveau juge dans la base de données
      * 
-     * @param juge
+     * @param jugeArg
      * 
      * @throws Exception
      */
-    public void ajouter(Juge juge) throws Exception
+    public void ajouter(Juge jugeArg) throws Exception
     {
         try
         {
-            if (juge.existe(juge))
-                throw new IFT287Exception("Le juge existe déjà : " + juge.getId());
+            if (juge.existe(jugeArg))
+                throw new IFT287Exception("Le juge existe déjà : " + jugeArg.getId());
 
-            juge.ajouter(juge);
+            juge.ajouter(jugeArg);
         }
         catch (Exception e)
         {
@@ -75,18 +75,18 @@ public class GestionJuge
     /**
      * Retirer un juge
      * 
-     * @param juge
+     * @param jugeArg
      * @throws Exception
      */
-    public void retirer(Juge juge) throws Exception
+    public void retirer(Juge jugeArg) throws Exception
     {
         try
         {
-            if (!juge.existe(juge))
-                throw new IFT287Exception("Juge inexistant : " + juge.getId());
-            if (proces.jugeEnCours(juge))
-                throw new IFT287Exception("Le juge " + juge.getId() + " n'a pas terminé tout ses procès");
-            juge.retirer(juge);
+            if (!juge.existe(jugeArg))
+                throw new IFT287Exception("Juge inexistant : " + jugeArg.getId());
+            if (proces.jugeEnCours(jugeArg))
+                throw new IFT287Exception("Le juge " + jugeArg.getId() + " n'a pas terminé tout ses procès");
+            juge.retirer(jugeArg);
         }
         catch (Exception e)
         {

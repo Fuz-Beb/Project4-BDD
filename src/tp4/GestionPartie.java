@@ -1,7 +1,5 @@
 package tp4;
 
-import java.sql.SQLException;
-
 /**
  * Gestion des transactions de la table partie.
  */
@@ -32,25 +30,24 @@ public class GestionPartie
      * Ajout d'un nouveau partie dans la base de données. S'il existe déjà, une
      * exception est levée.
      * 
-     * @param partie
-     * @throws SQLException
+     * @param partieArg
      * @throws IFT287Exception
      * @throws Exception
      */
-    public void ajout(Partie partie) throws SQLException, IFT287Exception, Exception
+    public void ajout(Partie partieArg) throws IFT287Exception, Exception
     {
         try
         {
             // Vérifie si le partie existe déjà
-            if (partie.existe(partie))
-                throw new IFT287Exception("Partie existe déjà: " + partie.getId());
+            if (partie.existe(partieArg))
+                throw new IFT287Exception("Partie existe déjà: " + partieArg.getId());
 
             // Vérifie si l'avocat existe
-            if (!avocat.existe(new Avocat(partie.getAvocat_id())))
-                throw new IFT287Exception("L'avocat " + partie.getAvocat_id() + "n'existe pas.");
+            if (!avocat.existe(new Avocat(partieArg.getAvocat().getId())))
+                throw new IFT287Exception("L'avocat " + partieArg.getAvocat().getId() + "n'existe pas.");
 
             // Ajout du partie
-            partie.ajout(partie);
+            partie.ajout(partieArg);
 
             // Commit
             cx.commit();

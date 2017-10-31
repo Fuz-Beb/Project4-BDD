@@ -43,20 +43,20 @@ public class GestionProces
     /**
      * Methode d'affichage d'un proces
      * 
-     * @param proces
+     * @param procesArg
      * @return Proces
      * @throws Exception
      */
-    public Proces affichage(Proces proces) throws Exception
+    public Proces affichage(Proces procesArg) throws Exception
     {
         Proces tupleProcesReturn = null;
 
         try
         {
-            if (!proces.existe(proces))
-                throw new IFT287Exception("Le proces " + proces.getId() + "n'existe pas");
+            if (!proces.existe(procesArg))
+                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
 
-            tupleProcesReturn = proces.affichage(proces);
+            tupleProcesReturn = proces.affichage(procesArg);
 
             cx.commit();
 
@@ -72,11 +72,11 @@ public class GestionProces
     /**
      * Methode de traitement pour effectuerTerminerProces
      * 
-     * @param proces
+     * @param procesArg
      * @param decisionProces
      * @throws Exception
      */
-    public void terminer(Proces proces, int decisionProces) throws Exception
+    public void terminer(Proces procesArg, int decisionProces) throws Exception
     {
         try
         {
@@ -84,25 +84,25 @@ public class GestionProces
 
             // Verification de la valeur de la decision
             if (decisionProces != 0 && decisionProces != 1)
-                throw new IFT287Exception("Impossible de terminer le proces " + proces.getId()
+                throw new IFT287Exception("Impossible de terminer le proces " + procesArg.getId()
                         + "car la valeur de la decision n'est ni 0 ni 1.");
 
             // Vérification que le proces existe
-            if (!proces.existe(proces))
-                throw new IFT287Exception("Le proces " + proces.getId() + "n'existe pas.");
+            if (!proces.existe(procesArg))
+                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas.");
 
             // Vérification que le proces a atteint sa date initiale
-            if (!proces.compareDate(proces))
-                throw new IFT287Exception("Le proces " + proces.getId() + "n'a pas atteint sa date initiale.");
+            if (!proces.compareDate(procesArg))
+                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'a pas atteint sa date initiale.");
 
-            proces.terminer(decisionProces, proces);
+            proces.terminer(decisionProces, procesArg);
 
-            idJuge = proces.changeJugeStatut(proces);
+            idJuge = proces.changeJugeStatut(procesArg);
 
             if (!proces.jugeEnCours(new Juge(idJuge)))
                 juge.changerDisponibilite(true, new Juge(idJuge));
 
-            seance.supprimerSeancesProcesTermine(proces.getId());
+            seance.supprimerSeancesProcesTermine(procesArg.getId());
 
             cx.commit();
         }
@@ -116,34 +116,34 @@ public class GestionProces
     /**
      * Permet de creer un proces
      * 
-     * @param proces
+     * @param procesArg
      * @throws Exception
      */
-    public void creer(Proces proces) throws Exception
+    public void creer(Proces procesArg) throws Exception
     {
         try
         {
-            if (proces.getDevantJury() != 0 && proces.getDevantJury() != 1)
-                throw new IFT287Exception("Impossible de creer le proces " + proces.getId()
+            if (procesArg.getDevantJury() != 0 && procesArg.getDevantJury() != 1)
+                throw new IFT287Exception("Impossible de creer le proces " + procesArg.getId()
                         + "car le champ devantJury ne peut être que 0 ou 1");
 
             // Vérification que le proces n'existe pas déjà
-            if (proces.existe(proces))
-                throw new IFT287Exception("Le proces " + proces.getId() + "existe déjà.");
+            if (proces.existe(procesArg))
+                throw new IFT287Exception("Le proces " + procesArg.getId() + "existe déjà.");
             // Vérification que l'id du juge est correcte
-            if (!juge.existe(new Juge(proces.getJuge_id())))
-                throw new IFT287Exception("Le juge " + proces.getJuge_id() + "n'existe pas.");
-            if (!partie.existe(new Partie(proces.getPartieDefenderesse_id())))
+            if (!juge.existe(new Juge(procesArg.getJuge().getId())))
+                throw new IFT287Exception("Le juge " + procesArg.getJuge().getId() + "n'existe pas.");
+            if (!partie.existe(new Partie(procesArg.getPartieDefenderesse().getId())))
                 throw new IFT287Exception(
-                        "La partie defenderesse " + proces.getPartieDefenderesse_id() + "n'existe pas.");
-            if (!partie.existe(new Partie(proces.getPartiePoursuivant_id())))
+                        "La partie defenderesse " + procesArg.getPartieDefenderesse().getId() + "n'existe pas.");
+            if (!partie.existe(new Partie(procesArg.getPartiePoursuivant().getId())))
                 throw new IFT287Exception(
-                        "La partie poursuivante " + proces.getPartiePoursuivant_id() + "n'existe pas.");
+                        "La partie poursuivante " + procesArg.getPartiePoursuivant().getId() + "n'existe pas.");
 
-            proces.creer(proces);
+            proces.creer(procesArg);
 
             // Rendre le juge non disponible
-            juge.changerDisponibilite(false, new Juge(proces.getJuge_id()));
+            juge.changerDisponibilite(false, new Juge(procesArg.getJuge().getId()));
             cx.commit();
         }
         catch (Exception e)

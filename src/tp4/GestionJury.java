@@ -33,16 +33,16 @@ public class GestionJury
     /**
      * Ajout d'une jury dans la base de données
      * 
-     * @param jury
+     * @param juryArg
      * @throws Exception
      */
-    public void ajouter(Jury jury) throws Exception
+    public void ajouter(Jury juryArg) throws Exception
     {
         try
         {
-            if (jury.existe(jury))
-                throw new IFT287Exception("Jury existe déjà : " + jury.getNas());
-            jury.ajouter(jury);
+            if (jury.existe(juryArg))
+                throw new IFT287Exception("Jury existe déjà : " + juryArg.getNas());
+            jury.ajouter(juryArg);
         }
         catch (Exception e)
         {
@@ -80,19 +80,19 @@ public class GestionJury
     /**
      * Assigner un proces à un jury
      * 
-     * @param proces
-     * @param jury
+     * @param procesArg
+     * @param juryArg
      * @throws Exception
      */
-    public void assignerProces(Jury jury, Proces proces) throws Exception
+    public void assignerProces(Jury juryArg, Proces procesArg) throws Exception
     {
         try
         {
-            if (!proces.existe(proces))
-                throw new IFT287Exception("Proces n'existe pas : " + proces.getId());
-            if (!proces.devantJury(proces))
-                throw new IFT287Exception("Le proces " + proces.getId() + "doit se tenir devant un juge seul");
-            jury.assignerProces(jury, proces);
+            if (!proces.existe(procesArg))
+                throw new IFT287Exception("Proces n'existe pas : " + procesArg.getId());
+            if (!proces.devantJury(procesArg))
+                throw new IFT287Exception("Le proces " + procesArg.getId() + "doit se tenir devant un juge seul");
+            jury.assignerProces(juryArg, procesArg);
         }
         catch (Exception e)
         {
