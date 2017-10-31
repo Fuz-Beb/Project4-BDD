@@ -1,6 +1,6 @@
 package tp4;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gestion des transactions de la table jury.
@@ -40,40 +40,43 @@ public class GestionJury
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             if (jury.existe(juryArg))
                 throw new IFT287Exception("Jury existe déjà : " + juryArg.getNas());
             jury.ajouter(juryArg);
+
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
     /**
      * Afficher la liste des jurys
      * 
-     * @return ArrayList<Jury>
-     *
-     * @throws Exception
+     * @return List<Jury>
      */
-    public ArrayList<Jury> affichage() throws Exception
+    public List<Jury> affichage()
     {
-        ArrayList<Jury> jury = null;
-
+        List<Jury> list = null;
         try
         {
-            jury = jury.affichage();
+            cx.getConnection().getTransaction().begin();
 
-            cx.commit();
+            list = jury.affichage();
 
-            return jury;
+            cx.getConnection().getTransaction().commit();
+
+            return list;
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
@@ -82,22 +85,26 @@ public class GestionJury
      * 
      * @param procesArg
      * @param juryArg
-     * @throws Exception
+     * @throws IFT287Exception
      */
-    public void assignerProces(Jury juryArg, Proces procesArg) throws Exception
+    public void assignerProces(Jury juryArg, Proces procesArg) throws IFT287Exception
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             if (!proces.existe(procesArg))
                 throw new IFT287Exception("Proces n'existe pas : " + procesArg.getId());
             if (!proces.devantJury(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "doit se tenir devant un juge seul");
             jury.assignerProces(juryArg, procesArg);
+
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 }

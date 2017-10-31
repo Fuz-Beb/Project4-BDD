@@ -1,11 +1,9 @@
 package tp4;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -19,8 +17,6 @@ public class TableProces
     private TypedQuery<Proces> stmtProcesJugeEnCours;
     private TypedQuery<Proces> stmtVerificationProcesDevantJury;
     private TypedQuery<Proces> stmtSelectJugeDansProces;
-    private TypedQuery<Proces> stmtTerminerProces;
-    private TypedQuery<Proces> stmtInsertProces;
     private Connexion cx;
 
     /**
@@ -31,24 +27,10 @@ public class TableProces
      */
     public TableProces(Connexion cx)
     {
-        // Formater la date
-        SimpleDateFormat formatAMJ = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        formatAMJ.setLenient(false);
-        Date currentDate = null;
-
-        try
-        {
-            currentDate = formatAMJ.parse(LocalDateTime.now().toString());
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select p from Proces where p.id = :id", Proces.class);
         stmtSelectProcesNonTermine = cx.getConnection()
-                .createQuery("select p from Proces where p.id = :id and p.date < " + currentDate, Proces.class);
+                .createQuery("select p from Proces where p.id = :id and p.date < :date", Proces.class);
         stmtVerificationProcesDecision = cx.getConnection()
                 .createQuery("select p from Proces where p.id = :id and p.decision = null", Proces.class);
         stmtProcesJugeEnCours = cx.getConnection()
@@ -56,11 +38,6 @@ public class TableProces
         stmtVerificationProcesDevantJury = cx.getConnection()
                 .createQuery("select p from Proces where p.id = :id and p.devantJury = 1", Proces.class);
         stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces where p.id = :id",
-                Proces.class);
-        stmtTerminerProces = cx.getConnection()
-                .createQuery("update Proces set p.decision = :decisionProces where p.id = :id", Proces.class);
-        stmtInsertProces = cx.getConnection().createQuery(
-                "insert into Proces (p.id, p.Juge_id, p.date, p.devantJury, p.PartieDefenderesse, p.PartiePoursuivant values (:id,:juge,:date,:devantJury,:partieDefenderesse,:partiePoursuivant)",
                 Proces.class);
     }
 
@@ -77,26 +54,15 @@ public class TableProces
     /**
      * Objet proces associé à un proces de la base de données
      * 
-     * @param proces
-     * @return Juge
-     * @throws IFT287Exception
+     * @param id
+     * @return Proces
+     * @throws Exception
      */
-    // public Proces getProces(Proces proces) throws IFT287Exception
-    // {
-    // stmtExiste.setParameter("id", proces.getId());
-    // List<Proces> procesList = stmtExiste.getResultList();
-    // if(!procesList.isEmpty())
-    // return procesList.get(0);
-    // else
-    // return null;
-    //
-    // // Si la decision a été prise
-    // if (proces.getDecision() != null)
-    // proces.setDecision(rset.getInt(7));
-    //
-    // rset.close();
-    // return proces;
-    // }
+    public Proces getProces(int id) throws Exception
+    {
+        stmtExiste.setParameter("id", id);
+        return stmtExiste.getSingleResult();
+    }
 
     /**
      * Verification de l'existance d'un proces
@@ -117,21 +83,11 @@ public class TableProces
      * @return String
      * @throws IFT287Exception
      */
-    // public Proces affichage(Proces proces) throws IFT287Exception
-    // {
-    // Proces tupleProcesReturn = null;
-    //
-    // stmtExiste.setInt(1, proces.getId());
-    // ResultSet rset = stmtExiste.executeQuery();
-    //
-    // if (rset.next())
-    // {
-    // tupleProcesReturn = getProces(new Proces(rset.getInt(1)));
-    // }
-    //
-    // rset.close();
-    // return tupleProcesReturn;
-    // }
+    public Proces affichage(Proces proces) throws IFT287Exception
+    {
+        stmtExiste.setParameter("id", proces.getId());
+        return stmtExiste.getSingleResult();
+    }
 
     /**
      * Vérification que le proces a atteint sa date initiale
@@ -142,6 +98,7 @@ public class TableProces
     public boolean compareDate(Proces proces)
     {
         stmtSelectProcesNonTermine.setParameter("id", proces.getId());
+        stmtSelectProcesNonTermine.setParameter("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         return !stmtSelectProcesNonTermine.getResultList().isEmpty();
     }
 
@@ -150,13 +107,10 @@ public class TableProces
      * 
      * @param decisionProces
      * @param proces
-     * @return int
      */
-    public int terminer(int decisionProces, Proces proces)
+    public void terminer(int decisionProces, Proces proces)
     {
-        stmtTerminerProces.setParameter("decisionProces", decisionProces);
-        stmtTerminerProces.setParameter("id", proces.getId());
-        return stmtTerminerProces.executeUpdate();
+        proces.setDecision(decisionProces);
     }
 
     /**
@@ -176,7 +130,7 @@ public class TableProces
         {
             return idJuge.get(0).getId();
         }
-        
+
         return -1;
     }
 
@@ -197,16 +151,13 @@ public class TableProces
      * 
      * @param proces
      * @return int
+     * @throws IllegalArgumentException
+     * @throws TransactionRequiredException
      */
-    public int creer(Proces proces)
+    public Proces creer(Proces proces) throws IllegalArgumentException, TransactionRequiredException
     {
-        stmtInsertProces.setParameter("id", proces.getId());
-        stmtInsertProces.setParameter("juge", proces.getJuge());
-        stmtInsertProces.setParameter("date", proces.getDate());
-        stmtInsertProces.setParameter("devantJury", proces.getDevantJury());
-        stmtInsertProces.setParameter("partieDefenderesse", proces.getPartieDefenderesse());
-        stmtInsertProces.setParameter("partiePoursuivante", proces.getPartiePoursuivant());
-        return stmtInsertProces.executeUpdate();
+        cx.getConnection().persist(proces);
+        return proces;
     }
 
     /**

@@ -2,6 +2,9 @@ package tp4;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -38,22 +41,13 @@ public class TableSeance
      * Affichage des seances lie a un proces
      * 
      * @param proces
-     * @return String
-     * @throws SQLException
+     * @return List<Seance>
      */
-    /*
-     * public ArrayList<Seance> affichage(Proces proces) throws SQLException {
-     * ArrayList<Seance> listSeance = new ArrayList<Seance>();
-     * 
-     * stmtExisteProcesDansSeance.setInt(1, proces.getId()); ResultSet rset =
-     * stmtExisteProcesDansSeance.executeQuery();
-     * 
-     * if (rset.next()) { do { // Ajout de chacun des juges dans la liste
-     * listSeance.add(getSeance(new Seance(rset.getInt(1)))); } while
-     * (rset.next()); }
-     * 
-     * rset.close(); return listSeance; }
-     */
+    public List<Seance> affichage(Proces proces)
+    {
+        stmtExisteProcesDansSeance.setParameter("idProces", proces.getId());
+        return stmtExisteProcesDansSeance.getResultList();
+    }
 
     /**
      * Retourner la connexion associée.
@@ -73,7 +67,7 @@ public class TableSeance
      */
     public Seance getSeance(int id)
     {
-        stmtExiste.setParameter(":idSeance", id);
+        stmtExiste.setParameter("idSeance", id);
         return stmtExiste.getSingleResult();
     }
 
@@ -81,12 +75,12 @@ public class TableSeance
      * Suppresion des seances prevues du proces
      * 
      * @param id
-     * @throws IFT287Exception
+     * @throws Exception
      */
-    public void supprimerSeancesProcesTermine(int id) throws IFT287Exception
+    public void supprimerSeancesProcesTermine(int id) throws Exception
     {
-        stmtSupprimerSeancesProcesTermine.setParameter(":idProces", id);
-        stmtSupprimerSeancesProcesTermine.setParameter(":date",
+        stmtSupprimerSeancesProcesTermine.setParameter("idProces", id);
+        stmtSupprimerSeancesProcesTermine.setParameter("date",
                 new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 
         for (Seance seance : stmtSupprimerSeancesProcesTermine.getResultList())
@@ -98,10 +92,9 @@ public class TableSeance
      * 
      * @param seance
      * @return le résultat de la suppression
-     * 
-     * @throws IFT287Exception
+     * @throws Exception
      */
-    public boolean supprimer(Seance seance) throws IFT287Exception
+    public boolean supprimer(Seance seance) throws Exception
     {
         if (seance != null)
         {
@@ -119,7 +112,7 @@ public class TableSeance
      */
     public boolean existe(int id)
     {
-        stmtExiste.setParameter(":idSeance", id);
+        stmtExiste.setParameter("idSeance", id);
         return !stmtExiste.getResultList().isEmpty();
     }
 
@@ -131,8 +124,8 @@ public class TableSeance
      */
     public boolean seancePassee(int id)
     {
-        stmtSeanceNonTerminee.setParameter(":idSeance", id);
-        stmtSeanceNonTerminee.setParameter(":date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+        stmtSeanceNonTerminee.setParameter("idSeance", id);
+        stmtSeanceNonTerminee.setParameter("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         return !stmtSeanceNonTerminee.getResultList().isEmpty();
     }
 
@@ -141,8 +134,10 @@ public class TableSeance
      * 
      * @param seance
      * @return la nouvelle seance ajouté
+     * @throws IllegalArgumentException
+     * @throws TransactionRequiredException
      */
-    public Seance ajout(Seance seance)
+    public Seance ajout(Seance seance) throws IllegalArgumentException, TransactionRequiredException
     {
         cx.getConnection().persist(seance);
         return seance;

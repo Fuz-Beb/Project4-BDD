@@ -1,6 +1,6 @@
 package tp4;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gestion des transactions de la table seance.
@@ -39,6 +39,8 @@ public class GestionSeance
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             // Vérification si la seance existe deja
             if (seance.existe(seanceArg.getId()))
                 throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
@@ -53,12 +55,12 @@ public class GestionSeance
 
             seance.ajout(seanceArg);
 
-            cx.commit();
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
@@ -72,6 +74,8 @@ public class GestionSeance
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             // Vérification si la seance existe
             if (!seance.existe(seanceArg.getId()))
                 throw new IFT287Exception("La seance n'existe pas : " + seanceArg.getId());
@@ -82,39 +86,42 @@ public class GestionSeance
 
             seance.supprimer(seanceArg);
 
-            cx.commit();
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
     /**
+     * Retourne la liste des seances liées à un proces pour affichage
+     * 
      * @param procesArg
-     * @return ArrayList<Seance>
-     * @throws Exception
+     * @return List<Seance>
+     * @throws IFT287Exception
      */
-    public ArrayList<Seance> affichage(Proces procesArg) throws Exception
+    public List<Seance> affichage(Proces procesArg) throws IFT287Exception
     {
-        ArrayList<Seance> listSeance = new ArrayList<Seance>();
-
+        List<Seance> list = null;
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             if (!proces.existe(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
+            else
+                list = seance.affichage(procesArg);
 
-            listSeance = seance.affichage(procesArg);
+            cx.getConnection().getTransaction().commit();
 
-            cx.commit();
-
-            return listSeance;
+            return list;
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 }

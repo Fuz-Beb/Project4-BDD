@@ -1,6 +1,6 @@
 package tp4;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Gestion des transaction de la table juge.
@@ -41,34 +41,44 @@ public class GestionJuge
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             if (juge.existe(jugeArg))
                 throw new IFT287Exception("Le juge existe déjà : " + jugeArg.getId());
 
             juge.ajouter(jugeArg);
+
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
     /**
      * Afficher la liste des juges actifs et disponibles
      * 
-     * @return ArrayList<Juge>
-     * @throws Exception
+     * @return List<Juge>
      */
-    public ArrayList<Juge> affichage() throws Exception
+    public List<Juge> affichage()
     {
+        List<Juge> list = null;
         try
         {
-            return juge.affichage();
+            cx.getConnection().getTransaction().begin();
+
+            list = juge.affichage();
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
@@ -76,22 +86,26 @@ public class GestionJuge
      * Retirer un juge
      * 
      * @param jugeArg
-     * @throws Exception
+     * @throws IFT287Exception
      */
-    public void retirer(Juge jugeArg) throws Exception
+    public void retirer(Juge jugeArg) throws IFT287Exception
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+
             if (!juge.existe(jugeArg))
                 throw new IFT287Exception("Juge inexistant : " + jugeArg.getId());
             if (proces.jugeEnCours(jugeArg))
                 throw new IFT287Exception("Le juge " + jugeArg.getId() + " n'a pas terminé tout ses procès");
             juge.retirer(jugeArg);
+
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 }

@@ -34,10 +34,12 @@ public class GestionPartie
      * @throws IFT287Exception
      * @throws Exception
      */
-    public void ajout(Partie partieArg) throws IFT287Exception, Exception
+    public void ajout(Partie partieArg) throws Exception
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+            
             // Vérifie si le partie existe déjà
             if (partie.existe(partieArg))
                 throw new IFT287Exception("Partie existe déjà: " + partieArg.getId());
@@ -49,13 +51,12 @@ public class GestionPartie
             // Ajout du partie
             partie.ajout(partieArg);
 
-            // Commit
-            cx.commit();
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 }

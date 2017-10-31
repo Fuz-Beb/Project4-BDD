@@ -45,27 +45,28 @@ public class GestionProces
      * 
      * @param procesArg
      * @return Proces
-     * @throws Exception
+     * @throws IFT287Exception
      */
-    public Proces affichage(Proces procesArg) throws Exception
+    public Proces affichage(Proces procesArg) throws IFT287Exception
     {
-        Proces tupleProcesReturn = null;
-
+        Proces list = null;
         try
         {
+            cx.getConnection().getTransaction().begin();
+            
             if (!proces.existe(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
-
-            tupleProcesReturn = proces.affichage(procesArg);
-
-            cx.commit();
-
-            return tupleProcesReturn;
+            else
+                list = proces.affichage(procesArg);
+            
+            cx.getConnection().getTransaction().commit();
+            
+            return list;
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
@@ -80,6 +81,8 @@ public class GestionProces
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+            
             int idJuge = 0;
 
             // Verification de la valeur de la decision
@@ -104,12 +107,13 @@ public class GestionProces
 
             seance.supprimerSeancesProcesTermine(procesArg.getId());
 
-            cx.commit();
+            cx.getConnection().getTransaction().commit();
+            
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 
@@ -123,6 +127,8 @@ public class GestionProces
     {
         try
         {
+            cx.getConnection().getTransaction().begin();
+            
             if (procesArg.getDevantJury() != 0 && procesArg.getDevantJury() != 1)
                 throw new IFT287Exception("Impossible de creer le proces " + procesArg.getId()
                         + "car le champ devantJury ne peut être que 0 ou 1");
@@ -144,12 +150,13 @@ public class GestionProces
 
             // Rendre le juge non disponible
             juge.changerDisponibilite(false, new Juge(procesArg.getJuge().getId()));
-            cx.commit();
+
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 }

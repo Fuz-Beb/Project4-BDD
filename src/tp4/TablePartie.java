@@ -1,5 +1,6 @@
 package tp4;
 
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -49,8 +50,10 @@ public class TablePartie
      * 
      * @param partie
      * @return Partie
+     * @throws IllegalArgumentException
+     * @throws TransactionRequiredException
      */
-    public Partie ajout(Partie partie)
+    public Partie ajout(Partie partie) throws IllegalArgumentException, TransactionRequiredException
     {
         cx.getConnection().persist(partie);
         return partie;

@@ -1,5 +1,8 @@
 package tp4;
 
+import java.util.List;
+
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -39,11 +42,11 @@ public class TableJuge
      * 
      * @param id
      * @return Juge
-     * @throws IFT287Exception
+     * @throws Exception
      */
-    public Juge getJuge(int id) throws IFT287Exception
+    public Juge getJuge(int id) throws Exception
     {
-        stmtExiste.setParameter(":idJuge", id);
+        stmtExiste.setParameter("idJuge", id);
         return stmtExiste.getSingleResult();
     }
 
@@ -55,35 +58,29 @@ public class TableJuge
      */
     public boolean existe(Juge juge)
     {
-        stmtExiste.setParameter(":idJuge", juge.getId());
+        stmtExiste.setParameter("idJuge", juge.getId());
         return !stmtExiste.getResultList().isEmpty();
     }
 
     /**
      * Afficher la liste des juges actifs et disponibles
      * 
-     * @return String
-     * @throws SQLException
-     * @throws IFT287Exception
+     * @return List<Juge>
      */
-    /*
-     * public ArrayList<Juge> affichage() throws SQLException, IFT287Exception {
-     * ArrayList<Juge> listJuge = new ArrayList<Juge>();
-     * 
-     * ResultSet rset = stmtSelect.executeQuery();
-     * 
-     * if (rset.next()) { do { // Ajout de chacun des juges dans la liste
-     * listJuge.add(getJuge(new Juge(rset.getInt(1)))); } while (rset.next()); }
-     * rset.close(); return listJuge; }
-     */
+    public List<Juge> affichage()
+    {
+        return stmtSelect.getResultList();
+    }
 
     /**
      * Ajout d'un nouveau juge dans la base de données
      * 
      * @param juge
      * @return Le juge qui a été ajouté
+     * @throws IllegalArgumentException
+     * @throws TransactionRequiredException
      */
-    public Juge ajouter(Juge juge)
+    public Juge ajouter(Juge juge) throws IllegalArgumentException, TransactionRequiredException
     {
         cx.getConnection().persist(juge);
         return juge;

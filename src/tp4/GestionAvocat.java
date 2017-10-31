@@ -29,18 +29,19 @@ public class GestionAvocat
     {
         try
         {
-            // Vérifie si l'avocat existe déjà
+            cx.getConnection().getTransaction().begin();
+
             if (avocat.existe(avocatArg))
                 throw new IFT287Exception("L'avocat existe déjà : " + avocatArg.getId());
 
             avocat.ajouter(avocatArg);
 
-            cx.commit();
+            cx.getConnection().getTransaction().commit();
         }
-        catch (Exception e)
+        finally
         {
-            cx.rollback();
-            throw e;
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
         }
     }
 }

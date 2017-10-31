@@ -2,6 +2,7 @@ package tp4;
 
 import java.sql.SQLException;
 
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -19,7 +20,7 @@ public class TableAvocat
      * @param cx
      * @throws SQLException
      */
-    public TableAvocat(Connexion cx) throws SQLException
+    public TableAvocat(Connexion cx)
     {
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select a from Avocat where a.id = :id", Avocat.class);
@@ -38,7 +39,7 @@ public class TableAvocat
     /**
      * Vérifie si l'avocat existe
      * 
-     * @param avocat 
+     * @param avocat
      * @return boolean
      */
     public boolean existe(Avocat avocat)
@@ -52,8 +53,10 @@ public class TableAvocat
      * 
      * @param avocat
      * @return Avocat
+     * @throws IllegalArgumentException 
+     * @throws TransactionRequiredException 
      */
-    public Avocat ajouter(Avocat avocat)
+    public Avocat ajouter(Avocat avocat) throws IllegalArgumentException, TransactionRequiredException
     {
         cx.getConnection().persist(avocat);
         return avocat;

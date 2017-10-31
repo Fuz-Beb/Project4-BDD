@@ -1,6 +1,8 @@
 package tp4;
 
-import java.sql.SQLException;
+import java.util.List;
+
+import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
 /**
@@ -40,12 +42,11 @@ public class TableJury
      * 
      * @param id
      * @return Jury
-     * @throws IFT287Exception
+     * @throws Exception
      */
-
-    public Jury getJury(int id) throws IFT287Exception
+    public Jury getJury(int id) throws Exception
     {
-        stmtExiste.setParameter(":idJury", id);
+        stmtExiste.setParameter("idJury", id);
         return stmtExiste.getSingleResult();
     }
 
@@ -57,7 +58,7 @@ public class TableJury
      */
     public boolean existe(Jury jury)
     {
-        stmtExiste.setParameter(":nasJury", jury.getNas());
+        stmtExiste.setParameter("nasJury", jury.getNas());
         return !stmtExiste.getResultList().isEmpty();
     }
 
@@ -65,27 +66,21 @@ public class TableJury
      * Affiche la liste des jurys
      * 
      * @return String
-     * @throws SQLException
-     * @throws IFT287Exception
      */
-    /*
-     * public ArrayList<Jury> affichage() throws SQLException, IFT287Exception {
-     * ArrayList<Jury> listJury = new ArrayList<Jury>();
-     * 
-     * ResultSet rset = stmtSelect.executeQuery();
-     * 
-     * if (rset.next()) { do { // Ajout de chacun des juges dans la liste
-     * listJury.add(getJury(new Jury(rset.getInt(1)))); } while (rset.next()); }
-     * rset.close(); return listJury; }
-     */
+    public List<Jury> affichage()
+    {
+        return stmtSelect.getResultList();
+    }
 
     /**
      * Ajout d'un nouveau jury dans la base de données
      * 
      * @param jury
      * @return le juge qui vient d'être ajouté
+     * @throws IllegalArgumentException
+     * @throws TransactionRequiredException
      */
-    public Jury ajouter(Jury jury)
+    public Jury ajouter(Jury jury) throws IllegalArgumentException, TransactionRequiredException
     {
         cx.getConnection().persist(jury);
         return jury;
@@ -96,9 +91,8 @@ public class TableJury
      * 
      * @param proces
      * @param jury
-     * @throws SQLException
      */
-    public void assignerProces(Jury jury, Proces proces) throws SQLException
+    public void assignerProces(Jury jury, Proces proces)
     {
         jury.setProces(proces);
     }
