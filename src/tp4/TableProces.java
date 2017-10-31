@@ -28,16 +28,16 @@ public class TableProces
     public TableProces(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select p from Proces where p.id = :id", Proces.class);
+        stmtExiste = cx.getConnection().createQuery("select p from Proces p where p.id = :id", Proces.class);
         stmtSelectProcesNonTermine = cx.getConnection()
-                .createQuery("select p from Proces where p.id = :id and p.date < :date", Proces.class);
+                .createQuery("select p from Proces p where p.id = :id and p.date < :date", Proces.class);
         stmtVerificationProcesDecision = cx.getConnection()
-                .createQuery("select p from Proces where p.id = :id and p.decision = null", Proces.class);
+                .createQuery("select p from Proces p where p.id = :id and p.decision = null", Proces.class);
         stmtProcesJugeEnCours = cx.getConnection()
-                .createQuery("select p from Proces where p.Juge_id = :id and p.decision = null", Proces.class);
+                .createQuery("select p from Proces p where p.juge = :id and p.decision = null", Proces.class);
         stmtVerificationProcesDevantJury = cx.getConnection()
-                .createQuery("select p from Proces where p.id = :id and p.devantJury = 1", Proces.class);
-        stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces where p.id = :id",
+                .createQuery("select p from Proces p where p.id = :id and p.devantJury = 1", Proces.class);
+        stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces p where p.id = :id",
                 Proces.class);
     }
 

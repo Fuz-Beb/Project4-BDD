@@ -20,7 +20,7 @@ public class TablePartie
     public TablePartie(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select p from Partie where id = p.id = :id", Partie.class);
+        stmtExiste = cx.getConnection().createQuery("select p from Partie p where p.id = :id", Partie.class);
     }
 
     /**

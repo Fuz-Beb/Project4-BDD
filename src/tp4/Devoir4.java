@@ -245,8 +245,7 @@ public class Devoir4
         }
         catch (Exception e)
         {
-            System.out.println(" " + e.toString());
-            gestionJustice.getCx().rollback();
+            System.err.println(" " + e.toString());
         }
     }
     // ****************************************************************

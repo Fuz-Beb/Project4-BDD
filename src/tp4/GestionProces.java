@@ -55,7 +55,7 @@ public class GestionProces
             cx.getConnection().getTransaction().begin();
 
             if (!proces.existe(procesArg))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
+                throw new IFT287Exception("Le proces " + procesArg.getId() + " n'existe pas");
             else
                 list = proces.affichage(procesArg);
 
@@ -88,15 +88,15 @@ public class GestionProces
             // Verification de la valeur de la decision
             if (decisionProces != 0 && decisionProces != 1)
                 throw new IFT287Exception("Impossible de terminer le proces " + procesArg.getId()
-                        + "car la valeur de la decision n'est ni 0 ni 1.");
+                        + " car la valeur de la decision n'est ni 0 ni 1.");
 
             // Vérification que le proces existe
             if (!proces.existe(procesArg))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas.");
+                throw new IFT287Exception("Le proces " + procesArg.getId() + " n'existe pas.");
 
             // Vérification que le proces a atteint sa date initiale
             if (!proces.compareDate(procesArg))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'a pas atteint sa date initiale.");
+                throw new IFT287Exception("Le proces " + procesArg.getId() + " n'a pas atteint sa date initiale.");
 
             proces.terminer(decisionProces, procesArg);
 
@@ -135,16 +135,16 @@ public class GestionProces
 
             // Vérification que le proces n'existe pas déjà
             if (proces.existe(procesArg))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "existe déjà.");
+                throw new IFT287Exception("Le proces " + procesArg.getId() + " existe déjà.");
             // Vérification que l'id du juge est correcte
             if (!juge.existe(new Juge(procesArg.getJuge().getId())))
-                throw new IFT287Exception("Le juge " + procesArg.getJuge().getId() + "n'existe pas.");
+                throw new IFT287Exception("Le juge " + procesArg.getJuge().getId() + " n'existe pas.");
             if (!partie.existe(new Partie(procesArg.getPartieDefenderesse().getId())))
                 throw new IFT287Exception(
-                        "La partie defenderesse " + procesArg.getPartieDefenderesse().getId() + "n'existe pas.");
+                        "La partie defenderesse " + procesArg.getPartieDefenderesse().getId() + " n'existe pas.");
             if (!partie.existe(new Partie(procesArg.getPartiePoursuivant().getId())))
                 throw new IFT287Exception(
-                        "La partie poursuivante " + procesArg.getPartiePoursuivant().getId() + "n'existe pas.");
+                        "La partie poursuivante " + procesArg.getPartiePoursuivant().getId() + " n'existe pas.");
 
             proces.creer(procesArg);
 

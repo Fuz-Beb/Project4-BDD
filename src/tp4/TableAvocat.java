@@ -20,7 +20,7 @@ public class TableAvocat
     public TableAvocat(Connexion cx)
     {
         this.cx = cx;
-        stmtExiste = cx.getConnection().createQuery("select a from Avocat where a.id = :id", Avocat.class);
+        stmtExiste = cx.getConnection().createQuery("select a from Avocat a where a.id = :id", Avocat.class);
     }
 
     /**

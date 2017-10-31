@@ -30,9 +30,9 @@ public class TableSeance
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select s from Seance s where s.id = :idSeance", Seance.class);
         stmtExisteProcesDansSeance = cx.getConnection()
-                .createQuery("select s from Seance s, s.proces p where p.id = :idProces", Seance.class);
+                .createQuery("select s from Seance s where s.id = :idProces", Seance.class);
         stmtSupprimerSeancesProcesTermine = cx.getConnection().createQuery(
-                "select s from Seance s, s.proces p where p.id = :idProces and s.date > :date", Seance.class);
+                "select s from Seance s where p.id = :idProces and s.date > :date", Seance.class);
         stmtSeanceNonTerminee = cx.getConnection()
                 .createQuery("select s from Seance s where s.id = :idSeance and s.date < :date", Seance.class);
     }
