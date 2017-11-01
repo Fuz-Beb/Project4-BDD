@@ -171,8 +171,9 @@ public class Devoir4
                 else if (command.equals("assignerJury"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionJury().assignerProces(new Jury(readInt(tokenizer)),
-                            new Proces(readInt(tokenizer)));
+                    gestionJustice.getGestionJury().assignerProces(
+                            gestionJustice.getGestionJury().getJury(readInt(tokenizer)),
+                            gestionJustice.getGestionProces().getProces(readInt(tokenizer)));
                 }
                 else if (command.equals("ajouterSeance"))
                 {
