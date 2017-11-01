@@ -94,12 +94,13 @@ public class TableJuge
      */
     public boolean retirer(Juge juge)
     {
-        if (juge != null)
-        {
-            juge.setQuitterJustice(true);
-            juge.setDisponible(false);
+        TypedQuery<Juge> quitterJusticeJuge = cx.getConnection().createQuery("update Juge j SET quitterJustice = true, disponible = false where j.id = :id", Juge.class);        
+        quitterJusticeJuge.setParameter("id", juge.getId());  
+        
+        // Si on a bien effectué les modifications alors on retourne vrai
+        if (quitterJusticeJuge.executeUpdate() == 1)
             return true;
-        }
+
         return false;
     }
 
