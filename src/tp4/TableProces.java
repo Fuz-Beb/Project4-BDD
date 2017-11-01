@@ -150,7 +150,7 @@ public class TableProces
      * Ajout du proces
      * 
      * @param proces
-     * @return int
+     * @return Proces
      * @throws IllegalArgumentException
      * @throws TransactionRequiredException
      */
