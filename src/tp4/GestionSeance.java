@@ -46,7 +46,7 @@ public class GestionSeance
                 throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
 
             // Verification si le proces existe
-            if (!proces.existe(new Proces(seanceArg.getProces().getId())))
+            if (!proces.existe(seanceArg.getProces().getId()))
                 throw new IFT287Exception("Le proces " + seanceArg.getProces().getId() + " n'existe pas.");
 
             // Verification si le proces specifie n'est pas termine
@@ -67,24 +67,24 @@ public class GestionSeance
     /**
      * Supprimer une seance
      * 
-     * @param seanceArg
+     * @param id
      * @throws Exception
      */
-    public void supprimer(Seance seanceArg) throws Exception
+    public void supprimer(int id) throws Exception
     {
         try
         {
             cx.getConnection().getTransaction().begin();
 
             // Vérification si la seance existe
-            if (!seance.existe(seanceArg.getId()))
-                throw new IFT287Exception("La seance n'existe pas : " + seanceArg.getId());
+            if (!seance.existe(id))
+                throw new IFT287Exception("La seance n'existe pas : " + id);
 
             // Vérification que la seance n'est pas encore passée
-            if (seance.seancePassee(seanceArg.getId()))
-                throw new IFT287Exception("La seance " + seanceArg.getId() + " est déjà passée.");
+            if (seance.seancePassee(id))
+                throw new IFT287Exception("La seance " + id + " est déjà passée.");
 
-            seance.supprimer(seanceArg);
+            seance.supprimer(id);
 
             cx.getConnection().getTransaction().commit();
         }
@@ -98,21 +98,21 @@ public class GestionSeance
     /**
      * Retourne la liste des seances liées à un proces pour affichage
      * 
-     * @param procesArg
+     * @param id
      * @return List<Seance>
      * @throws IFT287Exception
      */
-    public List<Seance> affichage(Proces procesArg) throws IFT287Exception
+    public List<Seance> affichage(int id) throws IFT287Exception
     {
         List<Seance> list = null;
         try
         {
             cx.getConnection().getTransaction().begin();
 
-            if (!proces.existe(procesArg))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
+            if (!proces.existe(id))
+                throw new IFT287Exception("Le proces " + id + "n'existe pas");
             else
-                list = seance.affichage(procesArg);
+                list = seance.affichage(id);
 
             cx.getConnection().getTransaction().commit();
 

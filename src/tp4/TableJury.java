@@ -92,14 +92,14 @@ public class TableJury
     /**
      * Assigner un proces à un jury
      * 
-     * @param proces
-     * @param jury
+     * @param idProces
+     * @param idJury
      * @return boolean
      */
-    public boolean assignerProces(Jury jury, Proces proces)
+    public boolean assignerProces(int idJury, int idProces)
     {
-        stmtChangeProces.setParameter("proces", proces);
-        stmtChangeProces.setParameter("nasJury", jury.getNas());
+        stmtChangeProces.setParameter("proces", idProces);
+        stmtChangeProces.setParameter("nasJury", idJury);
 
         if (stmtChangeProces.executeUpdate() == 1)
             return true;

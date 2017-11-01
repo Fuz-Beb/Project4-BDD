@@ -67,37 +67,37 @@ public class TableProces
     /**
      * Verification de l'existance d'un proces
      * 
-     * @param proces
+     * @param idProces
      * @return boolean
      */
-    public boolean existe(Proces proces)
+    public boolean existe(int idProces)
     {
-        stmtExiste.setParameter("id", proces.getId());
+        stmtExiste.setParameter("id", idProces);
         return !stmtExiste.getResultList().isEmpty();
     }
 
     /**
      * Affichage des elements de proces
      * 
-     * @param proces
+     * @param id
      * @return String
      * @throws IFT287Exception
      */
-    public Proces affichage(Proces proces) throws IFT287Exception
+    public Proces affichage(int id) throws IFT287Exception
     {
-        stmtExiste.setParameter("id", proces.getId());
+        stmtExiste.setParameter("id", id);
         return stmtExiste.getSingleResult();
     }
 
     /**
      * Vérification que le proces a atteint sa date initiale
      * 
-     * @param proces
+     * @param id
      * @return boolean
      */
-    public boolean compareDate(Proces proces)
+    public boolean compareDate(int id)
     {
-        stmtSelectProcesNonTermine.setParameter("id", proces.getId());
+        stmtSelectProcesNonTermine.setParameter("id", id);
         stmtSelectProcesNonTermine.setParameter("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         return !stmtSelectProcesNonTermine.getResultList().isEmpty();
     }
@@ -106,24 +106,24 @@ public class TableProces
      * Terminer le proces
      * 
      * @param decisionProces
-     * @param proces
+     * @param id
      */
-    public void terminer(int decisionProces, Proces proces)
+    public void terminer(int decisionProces, int id)
     {
-        proces.setDecision(decisionProces);
+        //.setDecision(decisionProces);
     }
 
     /**
      * Rendre le juge disponible si il n'a plus de proces en cours
      * 
-     * @param proces
+     * @param id
      * @return int
      */
-    public int changeJugeStatut(Proces proces)
+    public int changeJugeStatut(int id)
     {
         List<Proces> idJuge;
 
-        stmtSelectJugeDansProces.setParameter("id", proces.getId());
+        stmtSelectJugeDansProces.setParameter("id", id);
         idJuge = stmtSelectJugeDansProces.getResultList();
 
         if (!idJuge.isEmpty())
@@ -175,12 +175,12 @@ public class TableProces
     /**
      * Permet de savoir si un proces est devant un jury ou juge seul ou les deux
      * 
-     * @param proces
+     * @param idProces
      * @return boolean
      */
-    public boolean devantJury(Proces proces)
+    public boolean devantJury(int idProces)
     {
-        stmtVerificationProcesDevantJury.setParameter("id", proces.getId());
+        stmtVerificationProcesDevantJury.setParameter("id", idProces);
         return !stmtVerificationProcesDevantJury.getResultList().isEmpty();
     }
 }

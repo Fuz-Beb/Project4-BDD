@@ -83,23 +83,23 @@ public class GestionJury
     /**
      * Assigner un proces à un jury
      * 
-     * @param procesArg
-     * @param juryArg
+     * @param idJury
+     * @param idProces
      * @throws IFT287Exception
      */
-    public void assignerProces(Jury juryArg, Proces procesArg) throws IFT287Exception
+    public void assignerProces(int idJury, int idProces) throws IFT287Exception
     {
         try
         {
             cx.getConnection().getTransaction().begin();
 
-            if (!proces.existe(procesArg))
-                throw new IFT287Exception("Proces n'existe pas : " + procesArg.getId());
-            if (!proces.devantJury(procesArg))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + "doit se tenir devant un juge seul");
-            
-            if (!jury.assignerProces(juryArg, procesArg))
-                throw new IFT287Exception("L'assignation du proces " + procesArg.getId() + " au jury " + juryArg.getNas() + " a échoué");
+            if (!proces.existe(idProces))
+                throw new IFT287Exception("Proces n'existe pas : " + idProces);
+            if (!proces.devantJury(idProces))
+                throw new IFT287Exception("Le proces " + idProces + "doit se tenir devant un juge seul");
+
+            if (!jury.assignerProces(idJury, idProces))
+                throw new IFT287Exception("L'assignation du proces " + idProces + " au jury " + idJury + " a échoué");
 
             cx.getConnection().getTransaction().commit();
         }
