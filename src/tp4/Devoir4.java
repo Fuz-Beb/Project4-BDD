@@ -210,9 +210,9 @@ public class Devoir4
 
                     System.out.println("Affichage du proces " + proces.getId());
 
-                    System.out.println(proces.getId() + "\t" + proces.getJuge() + "\t" + proces.getDate() + "\t"
-                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse() + "\t"
-                            + proces.getPartiePoursuivant());
+                    System.out.println(proces.getId() + "\t" + proces.getJuge().getId() + "\t" + proces.getDate() + "\t"
+                            + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse().getId() + "\t"
+                            + proces.getPartiePoursuivant().getId());
 
                     seance = gestionJustice.getGestionSeance().affichage(proces);
 
