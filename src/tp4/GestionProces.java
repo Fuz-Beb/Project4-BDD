@@ -77,7 +77,7 @@ public class GestionProces
      * @param decisionProces
      * @throws Exception
      */
-    public void terminer(int id, int decisionProces) throws Exception
+    public void terminer(int id, String decisionProces) throws Exception
     {
         try
         {
@@ -86,7 +86,7 @@ public class GestionProces
             int idJuge = 0;
 
             // Verification de la valeur de la decision
-            if (decisionProces != 0 && decisionProces != 1)
+            if (decisionProces != "0" && decisionProces != "1")
                 throw new IFT287Exception(
                         "Impossible de terminer le proces " + id + " car la valeur de la decision n'est ni 0 ni 1.");
 
@@ -100,7 +100,7 @@ public class GestionProces
 
             proces.terminer(decisionProces, id);
 
-            idJuge = proces.changeJugeStatut(id);
+            idJuge = proces.getJugeProces(id);
 
             if (!proces.jugeEnCours(idJuge))
                 juge.changerDisponibilite(true, idJuge);

@@ -27,7 +27,7 @@ public class Proces
     private Partie partieDefenderesse;
     @OneToOne(cascade = CascadeType.PERSIST)
     private Partie partiePoursuivant;
-    private int decision;
+    private String decision;
 
     /**
      * Constructeur par défaut
@@ -76,46 +76,19 @@ public class Proces
     }
 
     /**
-     * @param id
-     *            the id to set
-     */
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    /**
      * @return the juge
      */
     public Juge getJuge()
     {
         return juge;
     }
-
-    /**
-     * @param juge
-     *            the juge to set
-     */
-    public void setJuge(Juge juge)
-    {
-        this.juge = juge;
-    }
-
+    
     /**
      * @return the date
      */
     public Date getDate()
     {
         return date;
-    }
-
-    /**
-     * @param date
-     *            the date to set
-     */
-    public void setDate(Date date)
-    {
-        this.date = date;
     }
 
     /**
@@ -127,29 +100,11 @@ public class Proces
     }
 
     /**
-     * @param devantJury
-     *            the devantJury to set
-     */
-    public void setDevantJury(int devantJury)
-    {
-        this.devantJury = devantJury;
-    }
-
-    /**
      * @return the partieDefenderesse
      */
     public Partie getPartieDefenderesse()
     {
         return partieDefenderesse;
-    }
-
-    /**
-     * @param partieDefenderesse
-     *            the partieDefenderesse to set
-     */
-    public void setPartieDefenderesse(Partie partieDefenderesse)
-    {
-        this.partieDefenderesse = partieDefenderesse;
     }
 
     /**
@@ -161,28 +116,10 @@ public class Proces
     }
 
     /**
-     * @param partiePoursuivant
-     *            the partiePoursuivant to set
-     */
-    public void setPartiePoursuivant(Partie partiePoursuivant)
-    {
-        this.partiePoursuivant = partiePoursuivant;
-    }
-
-    /**
      * @return the decision
      */
-    public int getDecision()
+    public String getDecision()
     {
         return decision;
-    }
-
-    /**
-     * @param decision
-     *            the decision to set
-     */
-    public void setDecision(int decision)
-    {
-        this.decision = decision;
     }
 }

@@ -67,12 +67,12 @@ public class TableProces
     /**
      * Verification de l'existance d'un proces
      * 
-     * @param idProces
+     * @param id
      * @return boolean
      */
-    public boolean existe(int idProces)
+    public boolean existe(int id)
     {
-        stmtExiste.setParameter("id", idProces);
+        stmtExiste.setParameter("id", id);
         return !stmtExiste.getResultList().isEmpty();
     }
 
@@ -105,21 +105,33 @@ public class TableProces
     /**
      * Terminer le proces
      * 
-     * @param decisionProces
+     * @param decision
      * @param id
+     * @return boolean
      */
-    public void terminer(int decisionProces, int id)
+    public boolean terminer(String decision, int id)
     {
-        //.setDecision(decisionProces);
+        TypedQuery<Proces> changerDecision = cx.getConnection()
+                .createQuery("update Proces p SET p.decision = :decision where p.id = :id", Proces.class);
+        changerDecision.setParameter("id", id);
+        changerDecision.setParameter("decision", decision);
+
+        // Si on a bien effectué les modifications alors on retourne vrai
+        if (changerDecision.executeUpdate() == 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * Rendre le juge disponible si il n'a plus de proces en cours
+     * Permet de récuperer le juge du proces
      * 
      * @param id
      * @return int
      */
-    public int changeJugeStatut(int id)
+    public int getJugeProces(int id)
     {
         List<Proces> idJuge;
 

@@ -95,9 +95,10 @@ public class TableJuge
      */
     public boolean retirer(int id)
     {
-        quitterJusticeJuge = cx.getConnection().createQuery("update Juge j SET quitterJustice = true, disponible = false where j.id = :id", Juge.class);        
-        quitterJusticeJuge.setParameter("id", id);  
-        
+        quitterJusticeJuge = cx.getConnection().createQuery(
+                "update Juge j SET quitterJustice = true, disponible = false where j.id = :id", Juge.class);
+        quitterJusticeJuge.setParameter("id", id);
+
         // Si on a bien effectué les modifications alors on retourne vrai
         if (quitterJusticeJuge.executeUpdate() == 1)
             return true;
@@ -114,13 +115,14 @@ public class TableJuge
      */
     public boolean changerDisponibilite(boolean disponible, int id)
     {
-        TypedQuery<Juge> changerDisponibiliteJuge = cx.getConnection().createQuery("update Juge j SET j.disponible = :disponibilite where j.id = :id", Juge.class);        
+        TypedQuery<Juge> changerDisponibiliteJuge = cx.getConnection()
+                .createQuery("update Juge j SET j.disponible = :disponibilite where j.id = :id", Juge.class);
         changerDisponibiliteJuge.setParameter("id", id);
         changerDisponibiliteJuge.setParameter("disponibilite", disponible);
-        
+
         // Si on a bien effectué les modifications alors on retourne vrai
-        if (changerDisponibiliteJuge.executeUpdate() == 1) {
-            System.out.println("test");
+        if (changerDisponibiliteJuge.executeUpdate() == 1)
+        {
             return true;
         }
 
