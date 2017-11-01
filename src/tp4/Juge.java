@@ -31,23 +31,13 @@ public class Juge
      * Constructeur de confort
      * 
      * @param id
-     */
-    public Juge(int id)
-    {
-        this.id = id;
-    }
-
-    /**
-     * Constructeur de confort
-     * 
-     * @param id
      * @param prenom
      * @param nom
      * @param age
      */
     public Juge(int id, String prenom, String nom, int age)
     {
-        this(id);
+        this.id = id;
         this.prenom = prenom;
         this.nom = nom;
         this.age = age;

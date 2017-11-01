@@ -43,7 +43,7 @@ public class GestionJuge
         {
             cx.getConnection().getTransaction().begin();
 
-            if (juge.existe(jugeArg))
+            if (juge.existe(jugeArg.getId()))
                 throw new IFT287Exception("Le juge existe déjà : " + jugeArg.getId());
 
             juge.ajouter(jugeArg);
@@ -85,20 +85,20 @@ public class GestionJuge
     /**
      * Retirer un juge
      * 
-     * @param jugeArg
+     * @param id
      * @throws IFT287Exception
      */
-    public void retirer(Juge jugeArg) throws IFT287Exception
+    public void retirer(int id) throws IFT287Exception
     {
         try
         {
             cx.getConnection().getTransaction().begin();
 
-            if (!juge.existe(jugeArg))
-                throw new IFT287Exception("Juge inexistant : " + jugeArg.getId());
-            if (proces.jugeEnCours(jugeArg))
-                throw new IFT287Exception("Le juge " + jugeArg.getId() + " n'a pas terminé tout ses procès");
-            juge.retirer(jugeArg);
+            if (!juge.existe(id))
+                throw new IFT287Exception("Juge inexistant : " + id);
+            if (proces.jugeEnCours(id))
+                throw new IFT287Exception("Le juge " + id + " n'a pas terminé tout ses procès");
+            juge.retirer(id);
 
             cx.getConnection().getTransaction().commit();
         }

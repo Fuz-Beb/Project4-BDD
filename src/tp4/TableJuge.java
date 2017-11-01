@@ -13,6 +13,7 @@ public class TableJuge
     private Connexion cx;
     private TypedQuery<Juge> stmtExiste;
     private TypedQuery<Juge> stmtSelect;
+    private TypedQuery<Juge> quitterJusticeJuge;
 
     /**
      * Création d'une instance. Des énoncés SQL pour chaque requête sont
@@ -53,12 +54,12 @@ public class TableJuge
     /**
      * Vérifie si le juge existe
      * 
-     * @param juge
+     * @param id
      * @return boolean
      */
-    public boolean existe(Juge juge)
+    public boolean existe(int id)
     {
-        stmtExiste.setParameter("idJuge", juge.getId());
+        stmtExiste.setParameter("idJuge", id);
         return !stmtExiste.getResultList().isEmpty();
     }
 
@@ -89,13 +90,13 @@ public class TableJuge
     /**
      * Retirer le juge de la base de données
      * 
-     * @param juge
+     * @param id
      * @return vrai si suppresion OK sinon faux
      */
-    public boolean retirer(Juge juge)
+    public boolean retirer(int id)
     {
-        TypedQuery<Juge> quitterJusticeJuge = cx.getConnection().createQuery("update Juge j SET quitterJustice = true, disponible = false where j.id = :id", Juge.class);        
-        quitterJusticeJuge.setParameter("id", juge.getId());  
+        quitterJusticeJuge = cx.getConnection().createQuery("update Juge j SET quitterJustice = true, disponible = false where j.id = :id", Juge.class);        
+        quitterJusticeJuge.setParameter("id", id);  
         
         // Si on a bien effectué les modifications alors on retourne vrai
         if (quitterJusticeJuge.executeUpdate() == 1)
@@ -107,11 +108,22 @@ public class TableJuge
     /**
      * Changer la disponibilite d'un juge
      * 
-     * @param disponibilite
-     * @param juge
+     * @param disponible
+     * @param id
+     * @return boolean
      */
-    public void changerDisponibilite(boolean disponibilite, Juge juge)
+    public boolean changerDisponibilite(boolean disponible, int id)
     {
-        juge.setDisponible(disponibilite);
+        TypedQuery<Juge> changerDisponibiliteJuge = cx.getConnection().createQuery("update Juge j SET j.disponible = :disponibilite where j.id = :id", Juge.class);        
+        changerDisponibiliteJuge.setParameter("id", id);
+        changerDisponibiliteJuge.setParameter("disponibilite", disponible);
+        
+        // Si on a bien effectué les modifications alors on retourne vrai
+        if (changerDisponibiliteJuge.executeUpdate() == 1) {
+            System.out.println("test");
+            return true;
+        }
+
+        return false;
     }
 }
