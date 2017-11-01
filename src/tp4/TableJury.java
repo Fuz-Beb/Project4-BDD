@@ -13,6 +13,7 @@ public class TableJury
     private Connexion cx;
     private TypedQuery<Jury> stmtExiste;
     private TypedQuery<Jury> stmtSelect;
+    private TypedQuery<Jury> stmtChangeProces;
 
     /**
      * Création d'une instance. Des énoncés SQL pour chaque requête sont
@@ -25,6 +26,8 @@ public class TableJury
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select j from Jury j where j.nas = :nasJury", Jury.class);
         stmtSelect = cx.getConnection().createQuery("select j from Jury j where j.proces = null", Jury.class);
+        stmtChangeProces = cx.getConnection().createQuery("update Jury j SET j.proces = :proces where j.nas = :nasJury",
+                Jury.class);
     }
 
     /**
@@ -46,7 +49,7 @@ public class TableJury
      */
     public Jury getJury(int id) throws Exception
     {
-        stmtExiste.setParameter("idJury", id);
+        stmtExiste.setParameter("nasJury", id);
         return stmtExiste.getSingleResult();
     }
 
@@ -91,9 +94,15 @@ public class TableJury
      * 
      * @param proces
      * @param jury
+     * @return boolean
      */
-    public void assignerProces(Jury jury, Proces proces)
+    public boolean assignerProces(Jury jury, Proces proces)
     {
-        jury.setProces(proces);
+        stmtChangeProces.setParameter("proces", proces);
+        stmtChangeProces.setParameter("nasJury", jury.getNas());
+
+        if (stmtChangeProces.executeUpdate() == 1)
+            return true;
+        return false;
     }
 }

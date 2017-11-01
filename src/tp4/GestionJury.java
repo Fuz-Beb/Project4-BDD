@@ -97,9 +97,38 @@ public class GestionJury
                 throw new IFT287Exception("Proces n'existe pas : " + procesArg.getId());
             if (!proces.devantJury(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "doit se tenir devant un juge seul");
-            jury.assignerProces(juryArg, procesArg);
+            
+            if (!jury.assignerProces(juryArg, procesArg))
+                throw new IFT287Exception("L'assignation du proces " + procesArg.getId() + " au jury " + juryArg.getNas() + " a échoué");
 
             cx.getConnection().getTransaction().commit();
+        }
+        finally
+        {
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
+        }
+    }
+
+    /**
+     * Retourne le jury demandé et reçu par TableJury
+     * 
+     * @param id
+     * @return Jury
+     * @throws Exception
+     */
+    public Jury getJury(int id) throws Exception
+    {
+        Jury list = null;
+        try
+        {
+            cx.getConnection().getTransaction().begin();
+
+            list = jury.getJury(id);
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
         }
         finally
         {
