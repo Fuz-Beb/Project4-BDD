@@ -188,7 +188,7 @@ public class Devoir4
                 else if (command.equals("terminerProces"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionProces().terminer(new Proces(readInt(tokenizer)), readInt(tokenizer));
+                    gestionJustice.getGestionProces().terminer(readInt(tokenizer), readString(tokenizer));
                 }
                 else if (command.equals("afficherJuges"))
                 {

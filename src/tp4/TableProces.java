@@ -67,12 +67,12 @@ public class TableProces
     /**
      * Verification de l'existance d'un proces
      * 
-     * @param proces
+     * @param id
      * @return boolean
      */
-    public boolean existe(Proces proces)
+    public boolean existe(int id)
     {
-        stmtExiste.setParameter("id", proces.getId());
+        stmtExiste.setParameter("id", id);
         return !stmtExiste.getResultList().isEmpty();
     }
 
@@ -92,12 +92,12 @@ public class TableProces
     /**
      * Vérification que le proces a atteint sa date initiale
      * 
-     * @param proces
+     * @param id
      * @return boolean
      */
-    public boolean compareDate(Proces proces)
+    public boolean compareDate(int id)
     {
-        stmtSelectProcesNonTermine.setParameter("id", proces.getId());
+        stmtSelectProcesNonTermine.setParameter("id", id);
         stmtSelectProcesNonTermine.setParameter("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         return !stmtSelectProcesNonTermine.getResultList().isEmpty();
     }
@@ -105,25 +105,37 @@ public class TableProces
     /**
      * Terminer le proces
      * 
-     * @param decisionProces
-     * @param proces
+     * @param decision
+     * @param id
+     * @return boolean
      */
-    public void terminer(int decisionProces, Proces proces)
+    public boolean terminer(String decision, int id)
     {
-        proces.setDecision(decisionProces);
+        TypedQuery<Proces> changerDecision = cx.getConnection()
+                .createQuery("update Proces p SET p.decision = :decision where p.id = :id", Proces.class);
+        changerDecision.setParameter("id", id);
+        changerDecision.setParameter("decision", decision);
+
+        // Si on a bien effectué les modifications alors on retourne vrai
+        if (changerDecision.executeUpdate() == 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /**
-     * Rendre le juge disponible si il n'a plus de proces en cours
+     * Permet de récuperer le juge du proces
      * 
-     * @param proces
+     * @param id
      * @return int
      */
-    public int changeJugeStatut(Proces proces)
+    public int getJugeProces(int id)
     {
         List<Proces> idJuge;
 
-        stmtSelectJugeDansProces.setParameter("id", proces.getId());
+        stmtSelectJugeDansProces.setParameter("id", id);
         idJuge = stmtSelectJugeDansProces.getResultList();
 
         if (!idJuge.isEmpty())

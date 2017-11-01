@@ -46,7 +46,7 @@ public class GestionSeance
                 throw new IFT287Exception("La seance existe deja: " + seanceArg.getId());
 
             // Verification si le proces existe
-            if (!proces.existe(new Proces(seanceArg.getProces().getId())))
+            if (!proces.existe(seanceArg.getProces().getId()))
                 throw new IFT287Exception("Le proces " + seanceArg.getProces().getId() + " n'existe pas.");
 
             // Verification si le proces specifie n'est pas termine
@@ -109,7 +109,7 @@ public class GestionSeance
         {
             cx.getConnection().getTransaction().begin();
 
-            if (!proces.existe(procesArg))
+            if (!proces.existe(procesArg.getId()))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "n'existe pas");
             else
                 list = seance.affichage(procesArg);

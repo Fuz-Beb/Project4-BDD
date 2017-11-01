@@ -93,7 +93,7 @@ public class GestionJury
         {
             cx.getConnection().getTransaction().begin();
 
-            if (!proces.existe(procesArg))
+            if (!proces.existe(procesArg.getId()))
                 throw new IFT287Exception("Proces n'existe pas : " + procesArg.getId());
             if (!proces.devantJury(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + "doit se tenir devant un juge seul");
