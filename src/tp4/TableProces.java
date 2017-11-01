@@ -79,13 +79,13 @@ public class TableProces
     /**
      * Affichage des elements de proces
      * 
-     * @param proces
+     * @param id
      * @return String
      * @throws IFT287Exception
      */
-    public Proces affichage(Proces proces) throws IFT287Exception
+    public Proces affichage(int id) throws IFT287Exception
     {
-        stmtExiste.setParameter("id", proces.getId());
+        stmtExiste.setParameter("id", id);
         return stmtExiste.getSingleResult();
     }
 
@@ -187,12 +187,12 @@ public class TableProces
     /**
      * Permet de savoir si un proces est devant un jury ou juge seul ou les deux
      * 
-     * @param proces
+     * @param idProces
      * @return boolean
      */
-    public boolean devantJury(Proces proces)
+    public boolean devantJury(int idProces)
     {
-        stmtVerificationProcesDevantJury.setParameter("id", proces.getId());
+        stmtVerificationProcesDevantJury.setParameter("id", idProces);
         return !stmtVerificationProcesDevantJury.getResultList().isEmpty();
     }
 }

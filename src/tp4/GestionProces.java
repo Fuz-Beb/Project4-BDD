@@ -43,21 +43,21 @@ public class GestionProces
     /**
      * Methode d'affichage d'un proces
      * 
-     * @param procesArg
+     * @param id
      * @return Proces
      * @throws IFT287Exception
      */
-    public Proces affichage(Proces procesArg) throws IFT287Exception
+    public Proces affichage(int id) throws IFT287Exception
     {
         Proces list = null;
         try
         {
             cx.getConnection().getTransaction().begin();
 
-            if (!proces.existe(procesArg.getId()))
-                throw new IFT287Exception("Le proces " + procesArg.getId() + " n'existe pas");
+            if (!proces.existe(id))
+                throw new IFT287Exception("Le proces " + id + " n'existe pas");
             else
-                list = proces.affichage(procesArg);
+                list = proces.affichage(id);
 
             cx.getConnection().getTransaction().commit();
 
@@ -87,8 +87,8 @@ public class GestionProces
 
             // Verification de la valeur de la decision
             if (decisionProces != "0" && decisionProces != "1")
-                throw new IFT287Exception("Impossible de terminer le proces " + id
-                        + " car la valeur de la decision n'est ni 0 ni 1.");
+                throw new IFT287Exception(
+                        "Impossible de terminer le proces " + id + " car la valeur de la decision n'est ni 0 ni 1.");
 
             // Vérification que le proces existe
             if (!proces.existe(id))
@@ -149,7 +149,7 @@ public class GestionProces
             proces.creer(procesArg);
 
             // Rendre le juge non disponible
-            if(!juge.changerDisponibilite(false, procesArg.getJuge().getId()))
+            if (!juge.changerDisponibilite(false, procesArg.getJuge().getId()))
                 throw new IFT287Exception("Erreur dans le changement");
 
             cx.getConnection().getTransaction().commit();

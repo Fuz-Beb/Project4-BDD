@@ -29,10 +29,10 @@ public class TableSeance
     {
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select s from Seance s where s.id = :idSeance", Seance.class);
-        stmtExisteProcesDansSeance = cx.getConnection()
-                .createQuery("select s from Seance s where s.id = :idProces", Seance.class);
-        stmtSupprimerSeancesProcesTermine = cx.getConnection().createQuery(
-                "select s from Seance s where p.id = :idProces and s.date > :date", Seance.class);
+        stmtExisteProcesDansSeance = cx.getConnection().createQuery("select s from Seance s where s.id = :idProces",
+                Seance.class);
+        stmtSupprimerSeancesProcesTermine = cx.getConnection()
+                .createQuery("select s from Seance s where p.id = :idProces and s.date > :date", Seance.class);
         stmtSeanceNonTerminee = cx.getConnection()
                 .createQuery("select s from Seance s where s.id = :idSeance and s.date < :date", Seance.class);
     }
@@ -40,12 +40,12 @@ public class TableSeance
     /**
      * Affichage des seances lie a un proces
      * 
-     * @param proces
+     * @param id
      * @return List<Seance>
      */
-    public List<Seance> affichage(Proces proces)
+    public List<Seance> affichage(int id)
     {
-        stmtExisteProcesDansSeance.setParameter("idProces", proces.getId());
+        stmtExisteProcesDansSeance.setParameter("idProces", id);
         return stmtExisteProcesDansSeance.getResultList();
     }
 
@@ -84,24 +84,18 @@ public class TableSeance
                 new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 
         for (Seance seance : stmtSupprimerSeancesProcesTermine.getResultList())
-            supprimer(new Seance(seance.getId()));
+            supprimer(seance.getId());
     }
 
     /**
      * Methode de traitement pour effectuerSupprimerSeance
      * 
-     * @param seance
-     * @return le résultat de la suppression
+     * @param id
      * @throws Exception
      */
-    public boolean supprimer(Seance seance) throws Exception
+    public void supprimer(int id) throws Exception
     {
-        if (seance != null)
-        {
-            cx.getConnection().remove(seance);
-            return true;
-        }
-        return false;
+        cx.getConnection().remove(id);
     }
 
     /**

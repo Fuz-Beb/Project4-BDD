@@ -171,9 +171,7 @@ public class Devoir4
                 else if (command.equals("assignerJury"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionJury().assignerProces(
-                            gestionJustice.getGestionJury().getJury(readInt(tokenizer)),
-                            gestionJustice.getGestionProces().getProces(readInt(tokenizer)));
+                    gestionJustice.getGestionJury().assignerProces(readInt(tokenizer), readInt(tokenizer));
                 }
                 else if (command.equals("ajouterSeance"))
                 {
@@ -184,7 +182,7 @@ public class Devoir4
                 else if (command.equals("supprimerSeance"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionSeance().supprimer(new Seance(readInt(tokenizer)));
+                    gestionJustice.getGestionSeance().supprimer(readInt(tokenizer));
                 }
                 else if (command.equals("terminerProces"))
                 {
@@ -207,7 +205,7 @@ public class Devoir4
                 else if (command.equals("afficherProces"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    proces = gestionJustice.getGestionProces().affichage(new Proces(readInt(tokenizer)));
+                    proces = gestionJustice.getGestionProces().affichage(readInt(tokenizer));
 
                     System.out.println("Affichage du proces " + proces.getId());
 
@@ -215,7 +213,7 @@ public class Devoir4
                             + proces.getDevantJury() + "\t" + proces.getPartieDefenderesse().getId() + "\t"
                             + proces.getPartiePoursuivant().getId());
 
-                    seance = gestionJustice.getGestionSeance().affichage(proces);
+                    seance = gestionJustice.getGestionSeance().affichage(proces.getId());
 
                     System.out.println("\nListe des séances liées au proces " + proces.getId());
 
