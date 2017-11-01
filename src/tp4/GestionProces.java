@@ -102,8 +102,8 @@ public class GestionProces
 
             idJuge = proces.changeJugeStatut(procesArg);
 
-            if (!proces.jugeEnCours(new Juge(idJuge)))
-                juge.changerDisponibilite(true, new Juge(idJuge));
+            if (!proces.jugeEnCours(idJuge))
+                juge.changerDisponibilite(true, idJuge);
 
             seance.supprimerSeancesProcesTermine(procesArg.getId());
 
@@ -137,7 +137,7 @@ public class GestionProces
             if (proces.existe(procesArg))
                 throw new IFT287Exception("Le proces " + procesArg.getId() + " existe déjà.");
             // Vérification que l'id du juge est correcte
-            if (!juge.existe(new Juge(procesArg.getJuge().getId())))
+            if (!juge.existe(procesArg.getJuge().getId()))
                 throw new IFT287Exception("Le juge " + procesArg.getJuge().getId() + " n'existe pas.");
             if (!partie.existe(new Partie(procesArg.getPartieDefenderesse().getId())))
                 throw new IFT287Exception(
@@ -149,7 +149,8 @@ public class GestionProces
             proces.creer(procesArg);
 
             // Rendre le juge non disponible
-            juge.changerDisponibilite(false, new Juge(procesArg.getJuge().getId()));
+            if(!juge.changerDisponibilite(false, procesArg.getJuge().getId()))
+                throw new IFT287Exception("Erreur dans le changement");
 
             cx.getConnection().getTransaction().commit();
         }

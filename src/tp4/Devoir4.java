@@ -139,7 +139,7 @@ public class Devoir4
                 else if (command.equals("retirerJuge"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionJuge().retirer(new Juge(readInt(tokenizer)));
+                    gestionJustice.getGestionJuge().retirer(readInt(tokenizer));
                 }
                 else if (command.equals("ajouterAvocat"))
                 {

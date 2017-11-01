@@ -137,12 +137,12 @@ public class TableProces
     /**
      * Verifier si un juge a des proces en cours
      * 
-     * @param juge
+     * @param id
      * @return boolean
      */
-    public boolean jugeEnCours(Juge juge)
+    public boolean jugeEnCours(int id)
     {
-        stmtProcesJugeEnCours.setParameter("id", juge.getId());
+        stmtProcesJugeEnCours.setParameter("id", id);
         return !stmtProcesJugeEnCours.getResultList().isEmpty();
     }
 
@@ -150,7 +150,7 @@ public class TableProces
      * Ajout du proces
      * 
      * @param proces
-     * @return int
+     * @return Proces
      * @throws IllegalArgumentException
      * @throws TransactionRequiredException
      */
