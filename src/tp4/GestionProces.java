@@ -86,9 +86,9 @@ public class GestionProces
             int idJuge = 0;
 
             // Verification de la valeur de la decision
-            if (decisionProces != "0" && decisionProces != "1")
+            if (!decisionProces.equals("0") && !decisionProces.equals("1"))
                 throw new IFT287Exception(
-                        "Impossible de terminer le proces " + id + " car la valeur de la decision n'est ni 0 ni 1.");
+                        "Impossible de terminer le proces " + id + " car la valeur doit être 0 ou 1.");
 
             // Vérification que le proces existe
             if (!proces.existe(id))

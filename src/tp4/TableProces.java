@@ -3,6 +3,7 @@ package tp4;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.persistence.TransactionRequiredException;
 import javax.persistence.TypedQuery;
 
@@ -30,11 +31,11 @@ public class TableProces
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select p from Proces p where p.id = :id", Proces.class);
         stmtSelectProcesNonTermine = cx.getConnection()
-                .createQuery("select p from Proces p where p.id = :id and p.date < :date", Proces.class);
+                .createQuery("select p from Proces p where p.id = :id and p.date < CURRENT_DATE", Proces.class);
         stmtVerificationProcesDecision = cx.getConnection()
-                .createQuery("select p from Proces p where p.id = :id and p.decision = null", Proces.class);
+                .createQuery("select p from Proces p where p.id = :id and p.decision is null", Proces.class);
         stmtProcesJugeEnCours = cx.getConnection()
-                .createQuery("select p from Proces p where p.juge = :id and p.decision = null", Proces.class);
+                .createQuery("select p from Proces p where p.juge = :id and p.decision is null", Proces.class);
         stmtVerificationProcesDevantJury = cx.getConnection()
                 .createQuery("select p from Proces p where p.id = :id and p.devantJury = 1", Proces.class);
         stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces p where p.id = :id",
@@ -98,7 +99,6 @@ public class TableProces
     public boolean compareDate(int id)
     {
         stmtSelectProcesNonTermine.setParameter("id", id);
-        stmtSelectProcesNonTermine.setParameter("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         return !stmtSelectProcesNonTermine.getResultList().isEmpty();
     }
 

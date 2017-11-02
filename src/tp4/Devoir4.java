@@ -182,7 +182,7 @@ public class Devoir4
                 else if (command.equals("supprimerSeance"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionSeance().supprimer(readInt(tokenizer));
+                    gestionJustice.getGestionSeance().supprimer(gestionJustice.getGestionSeance().getSeance(readInt(tokenizer)));
                 }
                 else if (command.equals("terminerProces"))
                 {

@@ -67,24 +67,24 @@ public class GestionSeance
     /**
      * Supprimer une seance
      * 
-     * @param id
+     * @param seanceArg
      * @throws Exception
      */
-    public void supprimer(int id) throws Exception
+    public void supprimer(Seance seanceArg) throws Exception
     {
         try
         {
             cx.getConnection().getTransaction().begin();
 
             // Vérification si la seance existe
-            if (!seance.existe(id))
-                throw new IFT287Exception("La seance n'existe pas : " + id);
+            if (!seance.existe(seanceArg.getId()))
+                throw new IFT287Exception("La seance n'existe pas : " + seanceArg);
 
             // Vérification que la seance n'est pas encore passée
-            if (seance.seancePassee(id))
-                throw new IFT287Exception("La seance " + id + " est déjà passée.");
+            if (seance.seancePassee(seanceArg.getId()))
+                throw new IFT287Exception("La seance " + seanceArg + " est déjà passée.");
 
-            seance.supprimer(id);
+            seance.supprimer(seanceArg);
 
             cx.getConnection().getTransaction().commit();
         }
@@ -113,6 +113,33 @@ public class GestionSeance
                 throw new IFT287Exception("Le proces " + id + "n'existe pas");
             else
                 list = seance.affichage(id);
+
+            cx.getConnection().getTransaction().commit();
+
+            return list;
+        }
+        finally
+        {
+            if (cx.getConnection().getTransaction().isActive())
+                cx.getConnection().getTransaction().rollback();
+        }
+    }
+    
+    /**
+     * Retourne le partie demandé et reçu par TableSeance
+     * 
+     * @param id
+     * @return Seance
+     * @throws Exception
+     */
+    public Seance getSeance(int id) throws Exception
+    {
+        Seance list = null;
+        try
+        {
+            cx.getConnection().getTransaction().begin();
+
+            list = seance.getSeance(id);
 
             cx.getConnection().getTransaction().commit();
 

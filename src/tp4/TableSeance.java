@@ -1,7 +1,5 @@
 package tp4;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.TransactionRequiredException;
@@ -32,9 +30,9 @@ public class TableSeance
         stmtExisteProcesDansSeance = cx.getConnection().createQuery("select s from Seance s where s.id = :idProces",
                 Seance.class);
         stmtSupprimerSeancesProcesTermine = cx.getConnection()
-                .createQuery("select s from Seance s where p.id = :idProces and s.date > :date", Seance.class);
+                .createQuery("select s from Seance s where p.id = :idProces and s.date > CURRENT_DATE", Seance.class);
         stmtSeanceNonTerminee = cx.getConnection()
-                .createQuery("select s from Seance s where s.id = :idSeance and s.date < :date", Seance.class);
+                .createQuery("select s from Seance s where s.id = :idSeance and s.date < CURRENT_DATE", Seance.class);
     }
 
     /**
@@ -80,22 +78,20 @@ public class TableSeance
     public void supprimerSeancesProcesTermine(int id) throws Exception
     {
         stmtSupprimerSeancesProcesTermine.setParameter("idProces", id);
-        stmtSupprimerSeancesProcesTermine.setParameter("date",
-                new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
 
         for (Seance seance : stmtSupprimerSeancesProcesTermine.getResultList())
-            supprimer(seance.getId());
+            supprimer(seance);
     }
 
     /**
      * Methode de traitement pour effectuerSupprimerSeance
      * 
-     * @param id
+     * @param seanceArg
      * @throws Exception
      */
-    public void supprimer(int id) throws Exception
+    public void supprimer(Seance seanceArg) throws Exception
     {
-        cx.getConnection().remove(id);
+        cx.getConnection().remove(seanceArg);
     }
 
     /**
@@ -119,7 +115,6 @@ public class TableSeance
     public boolean seancePassee(int id)
     {
         stmtSeanceNonTerminee.setParameter("idSeance", id);
-        stmtSeanceNonTerminee.setParameter("date", new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
         return !stmtSeanceNonTerminee.getResultList().isEmpty();
     }
 
