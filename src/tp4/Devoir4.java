@@ -220,7 +220,7 @@ public class Devoir4
                     // Affichage des séances une à une
                     for (Seance s : seance)
                     {
-                        System.out.println(s.getId() + "\t" + s.getProces() + "\t" + s.getDate());
+                        System.out.println(s.getId() + "\t" + s.getProces().getId() + "\t" + s.getDate());
                     }
                 }
                 else if (command.equals("afficherJurys"))
