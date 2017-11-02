@@ -12,9 +12,8 @@ public class Partie
 {
     @Id
     @GeneratedValue
-    private long m_id;
-    
     private int id;
+    
     private String prenom;
     private String nom;
     @OneToOne(cascade = CascadeType.PERSIST)

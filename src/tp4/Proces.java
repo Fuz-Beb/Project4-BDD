@@ -17,9 +17,8 @@ public class Proces
 {
     @Id
     @GeneratedValue
-    private long m_id;
+    private int id;
     
-    private int id;    
     @OneToOne(cascade = CascadeType.PERSIST)
     private Juge juge;
     private Date date;
