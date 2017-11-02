@@ -15,7 +15,7 @@ public class TableProces
     private TypedQuery<Proces> stmtVerificationProcesDecision;
     private TypedQuery<Proces> stmtProcesJugeEnCours;
     private TypedQuery<Proces> stmtVerificationProcesDevantJury;
-    private TypedQuery<Proces> stmtSelectJugeDansProces;
+    private TypedQuery<Juge> stmtSelectJugeDansProces;
     private Connexion cx;
 
     /**
@@ -37,7 +37,7 @@ public class TableProces
         stmtVerificationProcesDevantJury = cx.getConnection()
                 .createQuery("select p from Proces p where p.id = :id and p.devantJury = 1", Proces.class);
         stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces p where p.id = :id",
-                Proces.class);
+                Juge.class);
     }
 
     /**
@@ -131,7 +131,7 @@ public class TableProces
      */
     public int getJugeProces(int id)
     {
-        List<Proces> idJuge;
+        List<Juge> idJuge;
 
         stmtSelectJugeDansProces.setParameter("id", id);
         idJuge = stmtSelectJugeDansProces.getResultList();
