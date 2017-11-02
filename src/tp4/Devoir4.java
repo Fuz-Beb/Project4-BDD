@@ -245,6 +245,8 @@ public class Devoir4
         catch (Exception e)
         {
             System.err.println(" " + e.toString());
+            
+            e.printStackTrace();
         }
     }
     // ****************************************************************

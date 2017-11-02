@@ -11,8 +11,9 @@ public class Avocat
 {
     @Id
     @GeneratedValue
-    private int id;
+    private long m_id;
     
+    private int id;    
     private String prenom;
     private String nom;
     private int type;

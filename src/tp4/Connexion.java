@@ -58,7 +58,7 @@ public class Connexion
             Map<String, String> properties = new HashMap<String, String>();
               properties.put("javax.persistence.jdbc.user", user);
               properties.put("javax.persistence.jdbc.password", pass);
-            emf = Persistence.createEntityManagerFactory("objectdb://hibou.dinf.fsci.usherbrooke.ca:6136/"+user+"/" + bd, properties);
+            emf = Persistence.createEntityManagerFactory("objectdb://hibou.dinf.fsci.usherbrooke.ca:6136/"+user+"/" + bd + ".odb", properties);
         }
         else
         {
