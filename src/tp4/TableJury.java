@@ -25,7 +25,7 @@ public class TableJury
     {
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select j from Jury j where j.nas = :nasJury", Jury.class);
-        stmtSelect = cx.getConnection().createQuery("select j from Jury j where j.proces = null", Jury.class);
+        stmtSelect = cx.getConnection().createQuery("select j from Jury j where j.proces is null", Jury.class);
         stmtChangeProces = cx.getConnection().createQuery("update Jury j SET j.proces = :proces where j.nas = :nasJury",
                 Jury.class);
     }
@@ -92,13 +92,13 @@ public class TableJury
     /**
      * Assigner un proces à un jury
      * 
-     * @param idProces
+     * @param procesArg
      * @param idJury
      * @return boolean
      */
-    public boolean assignerProces(int idJury, int idProces)
+    public boolean assignerProces(int idJury, Proces procesArg)
     {
-        stmtChangeProces.setParameter("proces", idProces);
+        stmtChangeProces.setParameter("proces", procesArg);
         stmtChangeProces.setParameter("nasJury", idJury);
 
         if (stmtChangeProces.executeUpdate() == 1)

@@ -171,7 +171,7 @@ public class Devoir4
                 else if (command.equals("assignerJury"))
                 {
                     // Appel de la methode qui traite la transaction specifique
-                    gestionJustice.getGestionJury().assignerProces(readInt(tokenizer), readInt(tokenizer));
+                    gestionJustice.getGestionJury().assignerProces(readInt(tokenizer), gestionJustice.getGestionProces().getProces(readInt(tokenizer)));
                 }
                 else if (command.equals("ajouterSeance"))
                 {
@@ -245,7 +245,7 @@ public class Devoir4
         catch (Exception e)
         {
             System.err.println(" " + e.toString());
-            
+
             e.printStackTrace();
         }
     }
