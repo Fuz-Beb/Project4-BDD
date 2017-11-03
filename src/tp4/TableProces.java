@@ -33,7 +33,7 @@ public class TableProces
         stmtVerificationProcesDecision = cx.getConnection()
                 .createQuery("select p from Proces p where p.id = :id and p.decision is null", Proces.class);
         stmtProcesJugeEnCours = cx.getConnection()
-                .createQuery("select p from Proces p where p.juge = :id and p.decision is null", Proces.class);
+                .createQuery("select p from Proces p where p.juge.id = :id and p.decision is null", Proces.class);
         stmtVerificationProcesDevantJury = cx.getConnection()
                 .createQuery("select p from Proces p where p.id = :id and p.devantJury = 1", Proces.class);
         stmtSelectJugeDansProces = cx.getConnection().createQuery("select p.juge from Proces p where p.id = :id",
