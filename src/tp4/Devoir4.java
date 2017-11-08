@@ -109,9 +109,6 @@ public class Devoir4
      */
     static void executerTransaction(String transaction) throws Exception, IFT287Exception
     {
-        // Cette partie va completement changer Attention au getter qui retourne
-        // maintenant un objet et non les id à afficher.
-
         // Nécessaire pour l'affichage
         List<Juge> juge;
         List<Jury> jury;
