@@ -42,7 +42,7 @@ public class GestionJustice
         juge = new TableJuge(cx);
         avocat = new TableAvocat(cx);
 
-        gestionProces = new GestionProces(proces, seance, juge, partie);
+        gestionProces = new GestionProces(proces, seance, juge, partie, jury);
         gestionPartie = new GestionPartie(partie, avocat);
         gestionSeance = new GestionSeance(seance, proces);
         gestionJury = new GestionJury(jury, proces);

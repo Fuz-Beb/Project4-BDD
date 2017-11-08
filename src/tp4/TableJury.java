@@ -13,7 +13,9 @@ public class TableJury
     private Connexion cx;
     private TypedQuery<Jury> stmtExiste;
     private TypedQuery<Jury> stmtSelect;
+    private TypedQuery<Jury> stmtSelectJuryProces;
     private TypedQuery<Jury> stmtChangeProces;
+    private TypedQuery<Jury> stmtChangeProcesNullJury;
 
     /**
      * Création d'une instance. Des énoncés SQL pour chaque requête sont
@@ -26,7 +28,10 @@ public class TableJury
         this.cx = cx;
         stmtExiste = cx.getConnection().createQuery("select j from Jury j where j.nas = :nasJury", Jury.class);
         stmtSelect = cx.getConnection().createQuery("select j from Jury j where j.proces is null", Jury.class);
+        stmtSelectJuryProces = cx.getConnection().createQuery("select j from Jury j where j.proces is not null and j.proces.id = :proces", Jury.class);
         stmtChangeProces = cx.getConnection().createQuery("update Jury j SET j.proces = :proces where j.nas = :nasJury",
+                Jury.class);
+        stmtChangeProcesNullJury = cx.getConnection().createQuery("update Jury j SET j.proces = null where j.proces is not null and j.nas = :nasJury",
                 Jury.class);
     }
 
@@ -104,5 +109,21 @@ public class TableJury
         if (stmtChangeProces.executeUpdate() == 1)
             return true;
         return false;
+    }
+
+    /**
+     * @param proces_id
+     */
+    public void retirer(int proces_id)
+    {
+        stmtSelectJuryProces.setParameter("proces", proces_id);
+        List<Jury> listeJury = stmtSelectJuryProces.getResultList();
+        
+        for(Jury juryLigne : listeJury)
+        {
+            stmtChangeProcesNullJury.setParameter("proces", proces_id);
+            stmtChangeProcesNullJury.setParameter("nasJury", juryLigne.getNas());
+            stmtChangeProcesNullJury.executeUpdate();
+        }
     }
 }
